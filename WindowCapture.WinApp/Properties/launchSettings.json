@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WindowCapture.WinApp (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WindowCapture.WinApp (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

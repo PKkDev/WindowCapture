@@ -30,6 +30,11 @@ using NAudio.Wave.SampleProviders;
 using NAudio.Wave;
 // SignalR
 using Microsoft.AspNetCore.SignalR.Client;
+using NAudio.CoreAudioApi;
+using System.Linq;
+using System.Threading;
+using static CommunityToolkit.Mvvm.ComponentModel.__Internals.__TaskExtensions.TaskAwaitableWithoutEndValidation;
+using System.Text.RegularExpressions;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -93,6 +98,8 @@ namespace WindowCapture.WinApp.MVVM.View
 
         private WasapiLoopbackCapture Capture = null;
         private WaveFileWriter Writer = null;
+        private WaveOutEvent SilenceWaveOut = null;
+        private double RecordedSeconds = 0;
 
         StorageFile filePCAudio;
         StorageFile fileMicroAudio;
@@ -104,6 +111,64 @@ namespace WindowCapture.WinApp.MVVM.View
         public CapturePage()
         {
             InitializeComponent();
+
+            Task t1 = Task.Run(async () =>
+            {
+                try
+                {
+                    MMDevice g = WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice();
+                    MMDevice h = WasapiLoopbackCapture.GetDefaultCaptureDevice();
+                    //WasapiLoopbackCapture J = new WasapiLoopbackCapture();
+
+                    var l = new MMDeviceEnumerator();
+                    var lll1 = l.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.All);
+                    MMDevice? lll1Activ = lll1.FirstOrDefault(x => x.FriendlyName.Equals("Динамики (H310-1)"));
+                    MMDevice? lll1Activ1 = lll1.FirstOrDefault(x => x.FriendlyName.Equals("Громкоговорители / головные телефоны (IDT High Definition Audio CODEC)"));
+                    var lll2 = l.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.All);
+                    MMDevice? lll2Activ = lll2.FirstOrDefault(x => x.FriendlyName.Equals("Микрофон (H310-1)"));
+
+                    Capture = new WasapiLoopbackCapture(lll1Activ);
+                    filePCAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"test.mp3", CreationCollisionOption.ReplaceExisting);
+                    Writer = new WaveFileWriter(filePCAudio.Path, Capture.WaveFormat);
+
+                    Capture.DataAvailable += (s, a) =>
+                    {
+                        Writer.Write(a.Buffer, 0, a.BytesRecorded);
+                        RecordedSeconds = Writer.Position / Capture.WaveFormat.AverageBytesPerSecond;
+                    };
+
+                    Capture.RecordingStopped += (s, a) =>
+                    {
+                        Writer?.Dispose();
+                        Writer = null;
+                        Capture?.Dispose();
+                        Capture = null;
+                    };
+
+                    var silence = new SilenceProvider(new WaveFormat(44100, 2)).ToSampleProvider();
+                    SilenceWaveOut = new WaveOutEvent();
+                    SilenceWaveOut.Init(silence);
+                    SilenceWaveOut.Play();
+                    SilenceWaveOut.PlaybackStopped += (s, a) =>
+                    {
+                        SilenceWaveOut?.Dispose();
+                        SilenceWaveOut = null;
+                    };
+
+                }
+                catch (Exception ex) { }
+
+                Capture.StartRecording();
+
+            });
+            t1.Wait();
+
+            Task t2 = Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(15));
+                Capture.StopRecording();
+                SilenceWaveOut.Stop();
+            });
 
             Setup();
             SetupSignlR();
@@ -536,6 +601,10 @@ namespace WindowCapture.WinApp.MVVM.View
 
         private async Task SaveToUnionFile()
         {
+            //filePCAudio = await StorageFile.GetFileFromPathAsync("C:\\Users\\prode\\AppData\\Local\\Packages\\e3ce9e70-4227-4950-abfe-78557804a917_5q3yfc64hm9aa\\LocalCache\\20230206-1600-05_pc.mp3");
+            //fileVideo = await StorageFile.GetFileFromPathAsync("C:\\Users\\prode\\AppData\\Local\\Packages\\e3ce9e70-4227-4950-abfe-78557804a917_5q3yfc64hm9aa\\LocalCache\\20230206-1600-05_video_capture.mp4");
+            //fileMicroAudio = await StorageFile.GetFileFromPathAsync("C:\\Users\\prode\\AppData\\Local\\Packages\\e3ce9e70-4227-4950-abfe-78557804a917_5q3yfc64hm9aa\\LocalCache\\20230206-1600-05_micro.mp3");
+
             if (filePCAudio != null && fileVideo != null && fileMicroAudio != null)
             {
                 var fileUnionName = $"{DateTime.Now:yyyyMMdd-HHmm-ss}_unioun.mp4";

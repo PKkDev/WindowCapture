@@ -127,7 +127,7 @@ namespace WindowCapture.WinApp.MVVM.View
                     var lll2 = l.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.All);
                     MMDevice? lll2Activ = lll2.FirstOrDefault(x => x.FriendlyName.Equals("Микрофон (H310-1)"));
 
-                    Capture = new WasapiLoopbackCapture(lll1Activ);
+                    Capture = new WasapiLoopbackCapture(g);
                     filePCAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"test.mp3", CreationCollisionOption.ReplaceExisting);
                     Writer = new WaveFileWriter(filePCAudio.Path, Capture.WaveFormat);
 
@@ -434,9 +434,7 @@ namespace WindowCapture.WinApp.MVVM.View
                 await mediaCapture.InitializeAsync(mediaCaptureSettings);
 
                 mediaCapture.RecordLimitationExceeded += (MediaCapture sender) => { };
-                mediaCapture.Failed += (MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs) =>
-                {
-                };
+                mediaCapture.Failed += (MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs) => { };
 
                 MediaRecording = await mediaCapture.PrepareLowLagRecordToStorageFileAsync(
                     MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High), fileMicroAudio);

@@ -15,7 +15,7 @@ namespace WindowCapture.WinApp.Service
         private readonly Dictionary<string, Type> _pages = new()
         {
             { "Settings", typeof(SettingsPage) },
-            { "Capture", typeof(CapturePage) }
+            { "PCAudioCapture", typeof(CapturePage) }
         };
 
         public NavigationHelperService() { }

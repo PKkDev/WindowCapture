@@ -35,6 +35,7 @@ using System.Linq;
 using System.Threading;
 using static CommunityToolkit.Mvvm.ComponentModel.__Internals.__TaskExtensions.TaskAwaitableWithoutEndValidation;
 using System.Text.RegularExpressions;
+using WindowCapture.WinApp.Helpers;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -73,7 +74,7 @@ namespace WindowCapture.WinApp.MVVM.View
 
     public sealed partial class CapturePage : Page
     {
-        // Capture API objects.
+        // PCAudioCapture API objects.
         private SizeInt32 _lastSize;
         private GraphicsCaptureItem _captureItem;
         private Direct3D11CaptureFramePool _framePool;
@@ -96,10 +97,16 @@ namespace WindowCapture.WinApp.MVVM.View
         private MediaCaptureInitializationSettings mediaCaptureSettings;
         private LowLagMediaRecording MediaRecording;
 
-        private WasapiLoopbackCapture Capture = null;
-        private WaveFileWriter Writer = null;
+        private WasapiLoopbackCapture PCAudioCapture = null;
+        private WaveFileWriter PCAudioWriter = null;
         private WaveOutEvent SilenceWaveOut = null;
-        private double RecordedSeconds = 0;
+        private double _pCAudioRecordedSeconds;
+        public double PCAudioRecordedSeconds
+        {
+            get => _pCAudioRecordedSeconds;
+            set { _pCAudioRecordedSeconds = value; }
+        }
+
 
         StorageFile filePCAudio;
         StorageFile fileMicroAudio;
@@ -118,7 +125,6 @@ namespace WindowCapture.WinApp.MVVM.View
                 {
                     MMDevice g = WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice();
                     MMDevice h = WasapiLoopbackCapture.GetDefaultCaptureDevice();
-                    //WasapiLoopbackCapture J = new WasapiLoopbackCapture();
 
                     var l = new MMDeviceEnumerator();
                     var lll1 = l.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.All);
@@ -127,28 +133,33 @@ namespace WindowCapture.WinApp.MVVM.View
                     var lll2 = l.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.All);
                     MMDevice? lll2Activ = lll2.FirstOrDefault(x => x.FriendlyName.Equals("Микрофон (H310-1)"));
 
-                    Capture = new WasapiLoopbackCapture(g);
+                    PCAudioCapture = new WasapiLoopbackCapture(g);
                     filePCAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"test.mp3", CreationCollisionOption.ReplaceExisting);
-                    Writer = new WaveFileWriter(filePCAudio.Path, Capture.WaveFormat);
+                    PCAudioWriter = new WaveFileWriter(filePCAudio.Path, PCAudioCapture.WaveFormat);
 
-                    Capture.DataAvailable += (s, a) =>
+                    PCAudioCapture.DataAvailable += (s, a) =>
                     {
-                        Writer.Write(a.Buffer, 0, a.BytesRecorded);
-                        RecordedSeconds = Writer.Position / Capture.WaveFormat.AverageBytesPerSecond;
+                        PCAudioWriter.Write(a.Buffer, 0, a.BytesRecorded);
+
+                        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+                        {
+                            PCAudioRecordedSeconds = PCAudioWriter.Position / PCAudioCapture.WaveFormat.AverageBytesPerSecond;
+                            RecordedSecondsStr.Text = TimeSpan.FromSeconds(PCAudioRecordedSeconds).ConvertToStr();
+                        });
+
                     };
 
-                    Capture.RecordingStopped += (s, a) =>
+                    PCAudioCapture.RecordingStopped += (s, a) =>
                     {
-                        Writer?.Dispose();
-                        Writer = null;
-                        Capture?.Dispose();
-                        Capture = null;
+                        PCAudioWriter?.Dispose();
+                        PCAudioWriter = null;
+                        PCAudioCapture?.Dispose();
+                        PCAudioCapture = null;
                     };
 
                     var silence = new SilenceProvider(new WaveFormat(44100, 2)).ToSampleProvider();
                     SilenceWaveOut = new WaveOutEvent();
                     SilenceWaveOut.Init(silence);
-                    SilenceWaveOut.Play();
                     SilenceWaveOut.PlaybackStopped += (s, a) =>
                     {
                         SilenceWaveOut?.Dispose();
@@ -156,17 +167,32 @@ namespace WindowCapture.WinApp.MVVM.View
                     };
 
                 }
-                catch (Exception ex) { }
-
-                Capture.StartRecording();
-
+                catch (Exception ex)
+                {
+                }
             });
             t1.Wait();
 
-            Task t2 = Task.Run(async () =>
+            Task t2 = Task.Run(() =>
+            {
+                try
+                {
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+            });
+            t2.Wait();
+
+            SilenceWaveOut.Play();
+            PCAudioCapture.StartRecording();
+
+            Task t3 = Task.Run(async () =>
             {
                 await Task.Delay(TimeSpan.FromSeconds(15));
-                Capture.StopRecording();
+                PCAudioCapture.StopRecording();
                 SilenceWaveOut.Stop();
             });
 
@@ -398,20 +424,20 @@ namespace WindowCapture.WinApp.MVVM.View
                 #region capture PC audio
 
                 filePCAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"{nowDate}_pc.mp3", CreationCollisionOption.GenerateUniqueName);
-                Capture = new WasapiLoopbackCapture();
-                Writer = new WaveFileWriter(filePCAudio.Path, Capture.WaveFormat);
+                PCAudioCapture = new WasapiLoopbackCapture();
+                PCAudioWriter = new WaveFileWriter(filePCAudio.Path, PCAudioCapture.WaveFormat);
 
-                Capture.DataAvailable += (s, a) =>
+                PCAudioCapture.DataAvailable += (s, a) =>
                 {
-                    Writer.Write(a.Buffer, 0, a.BytesRecorded);
+                    PCAudioWriter.Write(a.Buffer, 0, a.BytesRecorded);
                 };
 
-                Capture.RecordingStopped += (s, a) =>
+                PCAudioCapture.RecordingStopped += (s, a) =>
                 {
-                    Writer?.Dispose();
-                    Writer = null;
-                    Capture?.Dispose();
-                    Capture = null;
+                    PCAudioWriter?.Dispose();
+                    PCAudioWriter = null;
+                    PCAudioCapture?.Dispose();
+                    PCAudioCapture = null;
                 };
 
                 #endregion capture PC audio
@@ -503,7 +529,7 @@ namespace WindowCapture.WinApp.MVVM.View
                     wo.Init(sine20Seconds);
                     wo.Play();
 
-                    Capture.StartRecording();
+                    PCAudioCapture.StartRecording();
 
                     await MediaRecording.StartAsync();
 
@@ -549,7 +575,7 @@ namespace WindowCapture.WinApp.MVVM.View
 
                 if (videoFrame == null)
                 {
-                    Capture?.StopRecording();
+                    PCAudioCapture?.StopRecording();
                     args.Request.Sample = null;
                     return;
                 }
@@ -561,7 +587,7 @@ namespace WindowCapture.WinApp.MVVM.View
             }
             catch (Exception ex)
             {
-                Capture?.StopRecording();
+                PCAudioCapture?.StopRecording();
                 args.Request.Sample = null;
                 return;
             }

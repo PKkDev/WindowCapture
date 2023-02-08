@@ -47,7 +47,11 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="15">
 
-            <TextBlock x:Name="RecordedSecondsStr" Text="0 sec"></TextBlock>
+            <TextBlock x:Name="PCRecordedSecondsStr" Text="0 sec"></TextBlock>
+
+            <TextBlock x:Name="MicroRecordedSecondsStr" Text="0 sec"></TextBlock>
+
+            <TextBlock x:Name="VideoRecordedSecondsStr" Text="0 sec"></TextBlock>
 
         </StackPanel>
 

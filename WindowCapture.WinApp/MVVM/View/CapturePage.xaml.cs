@@ -16,7 +16,6 @@ using Windows.Devices.Enumeration;
 using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX.Direct3D11;
 using Windows.Graphics;
-using Windows.Media.Capture;
 using Windows.Media.Core;
 using Windows.Media.Devices;
 using Windows.Media.Editing;
@@ -26,19 +25,12 @@ using Windows.Storage;
 using Windows.Devices.PointOfService;
 using Windows.Foundation;
 // NAudio
-using NAudio.Wave.SampleProviders;
 using NAudio.Wave;
 // SignalR
 using Microsoft.AspNetCore.SignalR.Client;
 using NAudio.CoreAudioApi;
-using System.Linq;
-using System.Threading;
-using static CommunityToolkit.Mvvm.ComponentModel.__Internals.__TaskExtensions.TaskAwaitableWithoutEndValidation;
-using System.Text.RegularExpressions;
 using WindowCapture.WinApp.Helpers;
-using Windows.Media.Capture.Frames;
 using Windows.Media.Audio;
-using Microsoft.UI.Xaml.Media;
 
 namespace WindowCapture.WinApp.MVVM.View
 {

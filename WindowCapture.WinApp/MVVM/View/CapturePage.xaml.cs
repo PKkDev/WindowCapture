@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using NAudio.CoreAudioApi;
 using WindowCapture.WinApp.Helpers;
 using Windows.Media.Audio;
+using System.Linq;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -141,8 +142,8 @@ namespace WindowCapture.WinApp.MVVM.View
             //{
             //    try
             //    {
-            //        MMDevice g = WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice();
-            //        MMDevice h = WasapiLoopbackCapture.GetDefaultCaptureDevice();
+            //        MMDevice defaultLoopbackCaptureDevice = WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice();
+            //        MMDevice defaultCaptureDevice = WasapiLoopbackCapture.GetDefaultCaptureDevice();
 
             //        var l = new MMDeviceEnumerator();
             //        var lll1 = l.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.All);
@@ -151,7 +152,24 @@ namespace WindowCapture.WinApp.MVVM.View
             //        var lll2 = l.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.All);
             //        MMDevice? lll2Activ = lll2.FirstOrDefault(x => x.FriendlyName.Equals("Микрофон (H310-1)"));
 
-            //        PCAudioCapture = new WasapiLoopbackCapture(g);
+
+            //        var gg = defaultLoopbackCaptureDevice.AudioEndpointVolume.VolumeRange;
+            //        var ss1 = defaultLoopbackCaptureDevice.AudioEndpointVolume.StepInformation;
+            //        var ss2 = defaultLoopbackCaptureDevice.AudioEndpointVolume.MasterVolumeLevel;
+
+            //        defaultLoopbackCaptureDevice.AudioEndpointVolume.VolumeStepUp();
+
+            //        var ss11 = defaultLoopbackCaptureDevice.AudioEndpointVolume.StepInformation;
+            //        var ss22 = defaultLoopbackCaptureDevice.AudioEndpointVolume.MasterVolumeLevel;
+
+            //        defaultLoopbackCaptureDevice.AudioEndpointVolume.VolumeStepUp();
+            //        defaultLoopbackCaptureDevice.AudioEndpointVolume.VolumeStepUp();
+            //        defaultLoopbackCaptureDevice.AudioEndpointVolume.VolumeStepUp();
+
+            //        var ss111 = defaultLoopbackCaptureDevice.AudioEndpointVolume.StepInformation;
+            //        var ss2222 = defaultLoopbackCaptureDevice.AudioEndpointVolume.MasterVolumeLevel;
+
+            //        PCAudioCapture = new WasapiLoopbackCapture(defaultLoopbackCaptureDevice);
             //        filePCAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"pc.mp3", CreationCollisionOption.ReplaceExisting);
             //        PCAudioWriter = new WaveFileWriter(filePCAudio.Path, PCAudioCapture.WaveFormat);
 
@@ -305,8 +323,8 @@ namespace WindowCapture.WinApp.MVVM.View
             //t3.Wait();
 
 
-            ////SilenceWaveOut.Play();
-            ////PCAudioCapture.StartRecording();
+            //SilenceWaveOut.Play();
+            //PCAudioCapture.StartRecording();
 
             //Task t4 = Task.Run(async () =>
             //{
@@ -318,8 +336,8 @@ namespace WindowCapture.WinApp.MVVM.View
             //    //deviceInputNode = null;
             //    //fileOutputNode = null;
 
-            //    //PCAudioCapture.StopRecording();
-            //    //SilenceWaveOut.Stop();
+            //    PCAudioCapture.StopRecording();
+            //    SilenceWaveOut.Stop();
             //});
 
             Setup();
@@ -549,8 +567,8 @@ namespace WindowCapture.WinApp.MVVM.View
 
                 #region capture PC audio
 
-                MMDevice g = WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice();
-                MMDevice h = WasapiLoopbackCapture.GetDefaultCaptureDevice();
+                MMDevice defaultLoopbackCaptureDevice = WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice();
+                MMDevice defaultCaptureDevice = WasapiLoopbackCapture.GetDefaultCaptureDevice();
 
                 //var l = new MMDeviceEnumerator();
                 //var lll1 = l.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.All);
@@ -559,7 +577,7 @@ namespace WindowCapture.WinApp.MVVM.View
                 //var lll2 = l.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.All);
                 //MMDevice? lll2Activ = lll2.FirstOrDefault(x => x.FriendlyName.Equals("Микрофон (H310-1)"));
 
-                PCAudioCapture = new WasapiLoopbackCapture(g);
+                PCAudioCapture = new WasapiLoopbackCapture(defaultLoopbackCaptureDevice);
                 filePCAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"{nowDate}_pc.mp3", CreationCollisionOption.GenerateUniqueName);
                 PCAudioWriter = new WaveFileWriter(filePCAudio.Path, PCAudioCapture.WaveFormat);
 

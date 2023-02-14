@@ -47,6 +47,9 @@ namespace WindowCapture.WinApp
                 services.AddTransient<ShellPage>();
                 services.AddTransient<CapturePage>();
 
+                services.AddTransient<MediaFolderPage>();
+                services.AddTransient<MediaFolderViewModel>();
+
                 services.AddTransient<NavigationHelperService>();
 
             })

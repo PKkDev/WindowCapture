@@ -14,8 +14,9 @@ namespace WindowCapture.WinApp.Service
 
         private readonly Dictionary<string, Type> _pages = new()
         {
-            { "Settings", typeof(SettingsPage) },
-            { "Capture", typeof(CapturePage) }
+            { "Capture", typeof(CapturePage) },
+            { "MediaFolder", typeof(MediaFolderPage) },
+            { "Settings", typeof(SettingsPage) }
         };
 
         public NavigationHelperService() { }

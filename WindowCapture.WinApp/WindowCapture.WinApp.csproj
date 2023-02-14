@@ -12,7 +12,13 @@
     <EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Assets\Icons\dat.png" />
+    <Content Remove="Assets\Icons\mp3.png" />
+    <Content Remove="Assets\Icons\mp4.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="MVVM\View\CapturePage.xaml" />
+    <None Remove="MVVM\View\MediaFolderPage.xaml" />
     <None Remove="MVVM\View\SettingsPage.xaml" />
     <None Remove="MVVM\View\ShellPage.xaml" />
   </ItemGroup>
@@ -47,7 +53,17 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="MVVM\Model\" />
+    <None Update="Assets\Icons\mp3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Icons\mp4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="MVVM\View\MediaFolderPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="MVVM\View\CapturePage.xaml">

@@ -21,6 +21,18 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
+                <NavigationViewItem Tag="MediaFolder" Content="media folder">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE954;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem Tag="Settings" Content="settings">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE713;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
             </NavigationView.MenuItems>
 
             <!--Margin="56,24,56,0" -->

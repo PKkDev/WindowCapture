@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using WindowCapture.WinApp.MVVM.Model;
 using Windows.Storage;
@@ -35,10 +37,38 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
         public MediaFileDetail SelectedMediaFileDetail { get; set; } = null;
 
+        public StandardUICommand DeleteCommand { get; set; }
+        public StandardUICommand OpenCommand { get; set; }
+
         public MediaFolderViewModel()
         {
-            CurrentFolder = ApplicationData.Current.LocalCacheFolder;
+
+            DeleteCommand = new StandardUICommand(StandardUICommandKind.Delete);
+            DeleteCommand.ExecuteRequested += async (XamlUICommand sender, ExecuteRequestedEventArgs args) =>
+            {
+                if (args.Parameter is string displayName)
+                {
+                    var search = ViewFiles.FirstOrDefault(x => x.DisplayName.Equals(displayName));
+                    if (search != null)
+                    {
+                        await search.File.DeleteAsync(StorageDeleteOption.Default);
+                        await LoadFilesInFolder();
+                    }
+                }
+            };
+            OpenCommand = new StandardUICommand(StandardUICommandKind.Open);
+            OpenCommand.ExecuteRequested += async (XamlUICommand sender, ExecuteRequestedEventArgs args) =>
+            {
+                if (args.Parameter is string displayName)
+                {
+                    var search = ViewFiles.FirstOrDefault(x => x.DisplayName.Equals(displayName));
+                    if (search != null)
+                        System.Diagnostics.Process.Start("CMD.exe", $"/C {search.File.Path}");
+                }
+            };
+
             ViewFiles = new();
+            CurrentFolder = ApplicationData.Current.LocalCacheFolder;
             OpenCurrentFolder = new RelayCommand(async () =>
             {
                 if (CurrentFolder != null)
@@ -50,6 +80,7 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
         private async Task LoadFilesInFolder()
         {
+            ViewFiles.Clear();
             IsFolderScaning = true;
             if (CurrentFolder == null)
             {
@@ -61,7 +92,7 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
             foreach (var file in files)
                 if (_acceptedExtenson.Contains(file.FileType))
-                    ViewFiles.Add(new(file));
+                    ViewFiles.Add(new(file, DeleteCommand, OpenCommand));
 
             IsFolderScaning = false;
         }

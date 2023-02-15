@@ -24,9 +24,9 @@
 
         </StackPanel>
 
-        <ProgressRing Grid.Row="1" IsActive="{x:Bind ViewModel.IsFolderScaning}" Height="80" Width="80" VerticalAlignment="Top"/>
+        <ProgressRing Grid.Row="1" IsActive="{x:Bind ViewModel.IsFolderScaning, Mode=TwoWay}" Height="80" Width="80" VerticalAlignment="Top"/>
 
-        <ListView Grid.Row="1" ItemsSource="{x:Bind ViewModel.ViewFiles}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ViewFilesItemClick">
+        <ListView Grid.Row="1" ItemsSource="{x:Bind ViewModel.ViewFiles, Mode=TwoWay}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ViewFilesItemClick">
 
             <!--<ListView.Resources>
                 <CommandBarFlyout x:Name="ViewFilesCommandsFlyout">
@@ -41,26 +41,35 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate>
+                    <UserControl>
 
-                    <Grid>
+                        <UserControl.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Command="{Binding DeleteCommand}" CommandParameter="{Binding DisplayName}" />
+                                <MenuFlyoutItem Command="{Binding OpenCommand}" CommandParameter="{Binding DisplayName}" />
+                            </MenuFlyout>
+                        </UserControl.ContextFlyout>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="47"></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
+                        <Grid>
 
-                        <Image Grid.Column="0" Source="{Binding LogoPath}" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="47"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="1" Text="{Binding DisplayName}" VerticalAlignment="Center"/>
+                            <Image Grid.Column="0" Source="{Binding LogoPath}" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
-                        <TextBlock Grid.Column="2" Text="{Binding DateCreated}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="{Binding DisplayName}" VerticalAlignment="Center"/>
 
-                        <TextBlock Grid.Column="3" Text="{Binding FileType}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="2" Text="{Binding DateCreated}" VerticalAlignment="Center"/>
 
-                    </Grid>
+                            <TextBlock Grid.Column="3" Text="{Binding FileType}" VerticalAlignment="Center"/>
 
+                        </Grid>
+
+                    </UserControl>
                 </DataTemplate>
             </ListView.ItemTemplate>
 

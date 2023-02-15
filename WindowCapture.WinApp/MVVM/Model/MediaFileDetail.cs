@@ -1,4 +1,5 @@
-﻿using Windows.Storage;
+﻿using System.Windows.Input;
+using Windows.Storage;
 
 namespace WindowCapture.WinApp.MVVM.Model
 {
@@ -14,8 +15,14 @@ namespace WindowCapture.WinApp.MVVM.Model
 
         public string DateCreated { get; set; }
 
-        public MediaFileDetail(StorageFile file)
+        public ICommand DeleteCommand { get; set; }
+        public ICommand OpenCommand { get; set; }
+
+        public MediaFileDetail(StorageFile file, ICommand deleteCommand, ICommand openCommand)
         {
+            DeleteCommand = deleteCommand;
+            OpenCommand = openCommand;
+
             File = file;
             DisplayName = file.DisplayName;
             DateCreated = file.DateCreated.ToString("dd.MM.yyyy HH:mm");

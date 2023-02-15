@@ -885,7 +885,7 @@ namespace WindowCapture.WinApp.MVVM.View
                 var fileUnionName = $"{DateTime.Now:yyyyMMdd-HHmm-ss}_unioun.mp4";
                 var fileUnion = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync(fileUnionName, CreationCollisionOption.GenerateUniqueName);
 
-                MediaComposition muxedStream = new MediaComposition();
+                MediaComposition muxedStream = new();
 
                 BackgroundAudioTrack pcAudioTrack = await BackgroundAudioTrack.CreateFromFileAsync(filePCAudio);
                 BackgroundAudioTrack microAudioTrack = await BackgroundAudioTrack.CreateFromFileAsync(fileMicroAudio);
@@ -895,7 +895,7 @@ namespace WindowCapture.WinApp.MVVM.View
                 muxedStream.BackgroundAudioTracks.Add(microAudioTrack);
                 muxedStream.Clips.Add(videoTrack);
 
-                await muxedStream.RenderToFileAsync(fileUnion, MediaTrimmingPreference.Precise);
+                var r = await muxedStream.RenderToFileAsync(fileUnion, MediaTrimmingPreference.Precise);
 
                 //MediaStreamSource mss = muxedStream.GenerateMediaStreamSource();
                 //mpElement.Source = MediaSource.CreateFromMediaStreamSource(mss);

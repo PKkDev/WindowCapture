@@ -5,15 +5,30 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using WindowCapture.WinApp.MVVM.Model;
-using WindowCapture.WinApp.MVVM.View;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.System;
 
 namespace WindowCapture.WinApp.MVVM.ViewModel
 {
     public class MediaFolderViewModel : ObservableRecipient
     {
-        private StorageFolder CurrentFolder { get; set; } = ApplicationData.Current.LocalCacheFolder;
+        private StorageFolder _currentFolder;
+        public StorageFolder CurrentFolder
+        {
+            get => _currentFolder;
+            set => SetProperty(ref _currentFolder, value);
+        }
+
+        private bool _isFolderScaning;
+        public bool IsFolderScaning
+        {
+            get => _isFolderScaning;
+            set => SetProperty(ref _isFolderScaning, value);
+        }
+
+        public RelayCommand OpenCurrentFolder { get; set; }
+
         private readonly List<string> _acceptedExtenson = new() { ".mp4", ".mp3" };
 
         public ObservableCollection<MediaFileDetail> ViewFiles { get; set; }
@@ -22,42 +37,39 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
         public MediaFolderViewModel()
         {
+            CurrentFolder = ApplicationData.Current.LocalCacheFolder;
             ViewFiles = new();
+            OpenCurrentFolder = new RelayCommand(async () =>
+            {
+                if (CurrentFolder != null)
+                    await Launcher.LaunchFolderAsync(CurrentFolder);
+            });
             Task t = Task.Run(async () => { await LoadFilesInFolder(); });
             t.Wait();
         }
 
         private async Task LoadFilesInFolder()
         {
-            if (CurrentFolder == null) { return; }
+            IsFolderScaning = true;
+            if (CurrentFolder == null)
+            {
+                IsFolderScaning = false;
+                return;
+            }
             CommonFileQuery query = CommonFileQuery.DefaultQuery;
             var files = await CurrentFolder.GetFilesAsync(query);
 
             foreach (var file in files)
                 if (_acceptedExtenson.Contains(file.FileType))
                     ViewFiles.Add(new(file));
+
+            IsFolderScaning = false;
         }
 
         public void ViewFilesClick(MediaFileDetail fileDetail)
         {
             SelectedMediaFileDetail = fileDetail;
-
             System.Diagnostics.Process.Start("CMD.exe", $"/C {fileDetail.File.Path}");
-
-            //System.Diagnostics.Process process = new System.Diagnostics.Process();
-            //System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            //startInfo.FileName = "cmd.exe";
-            //startInfo.Arguments = "/C {fileDetail.File.Path}";
-            //process.StartInfo = startInfo;
-            //process.Start();
-
-            //var newWindow = new MainWindow();
-            //var shell = App.GetService<ShellPage>();
-            //shell.RequestedTheme = Microsoft.UI.Xaml.ElementTheme.Default;
-            //newWindow.Content = shell;
-            //newWindow.Activate();
-
         }
     }
 }

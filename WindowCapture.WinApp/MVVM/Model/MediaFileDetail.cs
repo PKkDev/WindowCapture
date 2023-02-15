@@ -12,10 +12,13 @@ namespace WindowCapture.WinApp.MVVM.Model
 
         public string FileType { get; set; }
 
+        public string DateCreated { get; set; }
+
         public MediaFileDetail(StorageFile file)
         {
             File = file;
             DisplayName = file.DisplayName;
+            DateCreated = file.DateCreated.ToString("dd.MM.yyyy HH:mm");
             FileType = file.FileType.Trim('.');
             LogoPath = GetLogoPath(FileType);
         }

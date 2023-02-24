@@ -71,8 +71,8 @@ namespace WindowCapture.WinApp
         {
             MainWindow = new MainWindow();
 
-            _shell = App.GetService<ShellPage>();
-            MainWindow.Content = _shell ?? new Frame();
+            //_shell = App.GetService<ShellPage>();
+            //MainWindow.Content = _shell ?? new Frame();
 
             MainWindow.Activate();
         }

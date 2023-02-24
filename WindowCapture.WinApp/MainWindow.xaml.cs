@@ -20,13 +20,13 @@ namespace WindowCapture.WinApp
             hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             App = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(hWnd));
 
-            App.TitleBar.ExtendsContentIntoTitleBar = true;
-            App.TitleBar.ButtonBackgroundColor = Colors.Transparent;
-            App.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            App.TitleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(50, 255, 255, 255);
-            App.TitleBar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(90, 255, 255, 255);
+            //App.TitleBar.ExtendsContentIntoTitleBar = true;
+            //App.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+            //App.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            //App.TitleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(50, 255, 255, 255);
+            //App.TitleBar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(90, 255, 255, 255);
 
-            MakeTransparent();
+            //MakeTransparent();
 
             //Maximize();
         }
@@ -37,9 +37,9 @@ namespace WindowCapture.WinApp
             //SetAcrylic(false, true);
             //SetBlur(false, true);
 
-            var r3 = Win32.SetLayeredWindowAttributes(hWnd, (uint)ColorTranslator.ToWin32(Color.Red), 10, Win32.LWA_COLORKEY);
+            //var r3 = Win32.SetLayeredWindowAttributes(hWnd, (uint)ColorTranslator.ToWin32(Color.Red), 10, Win32.LWA_COLORKEY);
 
-            Main.Background = new SolidColorBrush(Colors.Transparent);
+            //Main.Background = new SolidColorBrush(Colors.Transparent);
         }
 
 

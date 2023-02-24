@@ -6,10 +6,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid x:Name="Main">
+    <!--<Grid x:Name="Main">
 
         <Button Content="asdasdasd" Click="Button_Click" ></Button>
 
-    </Grid>
+    </Grid>-->
 
 </Window>

@@ -1,24 +1,43 @@
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
 using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
+using Windows.Graphics.Imaging;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+using Windows.Storage.Streams;
+using Windows.Media;
+using Windows.Security.Cryptography;
+using Windows.Graphics.Capture;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using Windows.Foundation.Metadata;
+using static WindowCapture.WinApp.WindowEnumerationHelper;
+using System.Threading.Tasks;
 
 namespace WindowCapture.WinApp
 {
+    public class WindowInfo
+    {
+        public string Title { get; set; }
+        public IntPtr HWND { get; set; }
+        public Bitmap IconB { get; set; }
+        public SoftwareBitmap IconSB { get; set; }
+    }
+
     public sealed partial class MainWindow : Window
     {
         private IntPtr hWnd;
-        private AppWindow App;
+        private Microsoft.UI.Windowing.AppWindow App;
+        Microsoft.UI.WindowId windowId;
 
         public MainWindow()
         {
             InitializeComponent();
 
             hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            App = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(hWnd));
+            windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            App = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd));
 
             //App.TitleBar.ExtendsContentIntoTitleBar = true;
             //App.TitleBar.ButtonBackgroundColor = Colors.Transparent;
@@ -31,77 +50,123 @@ namespace WindowCapture.WinApp
             //Maximize();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            //SetMica(false, true);
-            //SetAcrylic(false, true);
-            //SetBlur(false, true);
 
-            //var r3 = Win32.SetLayeredWindowAttributes(hWnd, (uint)ColorTranslator.ToWin32(Color.Red), 10, Win32.LWA_COLORKEY);
+            //await StartPickerCaptureAsync();
 
-            //Main.Background = new SolidColorBrush(Colors.Transparent);
+            ObservableCollection<Process> processes = new();
+
+            #region InitWindowList
+
+            if (ApiInformation.IsApiContractPresent(typeof(Windows.Foundation.UniversalApiContract).FullName, 8))
+            {
+                var processesWithWindows = from p in Process.GetProcesses()
+                                           where !string.IsNullOrWhiteSpace(p.MainWindowTitle) && WindowEnumerationHelper.IsWindowValidForCapture(p.MainWindowHandle)
+                                           select p;
+                processes = new ObservableCollection<Process>(processesWithWindows);
+            }
+
+            #endregion InitWindowList
+
+            var process = processes
+                .FirstOrDefault(x => x.MainWindowTitle.Equals("œ–Œ’Œ∆ƒ≈Õ»≈ RISEN 3 | ◊¿—“‹ 18 - “≈œÀ¿ﬂ ¬—“–≈◊¿ - YouTube - Google Chrome"));
+            var processHWND = process.MainWindowHandle;
+            StartHwndCapture(processHWND);
+
+            ObservableCollection<MonitorInfo> monitors = new();
+
+            #region InitMonitorList
+
+            if (ApiInformation.IsApiContractPresent(typeof(Windows.Foundation.UniversalApiContract).FullName, 8))
+                monitors = new ObservableCollection<MonitorInfo>(MonitorEnumerationHelper.GetMonitors());
+
+            #endregion InitMonitorList
+
+            //var monitor = monitors.FirstOrDefault(x => x.DeviceName.Equals(""));
+            //var monitorHMON = monitor.Hmon;
+            //StartHmonCapture(monitorHMON);
+
+            List<WindowInfo> windowInfo1 = new();
+            Win32.EnumDelegate filter = delegate (IntPtr hWnd, int lParam)
+            {
+                StringBuilder strbTitle = new(255);
+                int nLength = Win32.GetWindowText(hWnd, strbTitle, strbTitle.Capacity + 1);
+                string strTitle = strbTitle.ToString();
+
+                if (Win32.IsWindowVisible(hWnd) && !string.IsNullOrEmpty(strTitle))
+                {
+                    WindowInfo wi = new();
+                    wi.Title = strTitle;
+                    wi.HWND = hWnd;
+
+                    IntPtr hIcon = default;
+                    hIcon = Win32.SendMessage(hWnd, Win32.WM_GETICON, Win32.ICON_SMALL2, IntPtr.Zero);
+                    if (hIcon == IntPtr.Zero) hIcon = Win32.GetClassLongPtr(hWnd, Win32.GCL_HICON);
+                    if (hIcon == IntPtr.Zero) hIcon = Win32.LoadIcon(IntPtr.Zero, Win32.IDI_APPLICATION);
+                    if (hIcon != IntPtr.Zero)
+                    {
+                        var icon = new Bitmap(Icon.FromHandle(hIcon).ToBitmap(), 16, 16);
+                        wi.IconB = icon;
+
+                        ImageConverter converter = new();
+                        var b = (byte[])converter.ConvertTo(icon, typeof(byte[]));
+                        IBuffer buffer = CryptographicBuffer.CreateFromByteArray(b);
+                        SoftwareBitmap softwareBitmap = new(BitmapPixelFormat.Gray8, icon.Width, icon.Height);
+                        softwareBitmap.CopyFromBuffer(buffer);
+                        VideoFrame inputImage = VideoFrame.CreateWithSoftwareBitmap(softwareBitmap);
+                        wi.IconSB = softwareBitmap;
+                    }
+
+                    windowInfo1.Add(wi);
+                }
+                return true;
+            };
+            Win32.EnumDesktopWindows(IntPtr.Zero, filter, IntPtr.Zero);
+
+            var first = windowInfo1.FirstOrDefault(x => x.Title.Equals("WindowCapture (Running) - Microsoft Visual Studio"));
+            Microsoft.UI.WindowId windowIdM = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(first.HWND);
+            IntPtr window = Microsoft.UI.Win32Interop.GetWindowFromWindowId(windowIdM);
+            //var apw = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowIdM);
         }
 
+        private void Maximize() => Win32.ShowWindow(hWnd, 3);
 
-        private void MakeTransparent()
+        private void Normal() => Win32.ShowWindow(hWnd, 1);
+
+        private async Task StartPickerCaptureAsync()
         {
-            Win32.SubClassDelegate = new(Win32.WindowSubClass);
-            var r1 = Win32.SetWindowSubclass(hWnd, Win32.SubClassDelegate, 0, 0);
+            GraphicsCapturePicker picker = new();
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hWnd);
+            GraphicsCaptureItem item = await picker.PickSingleItemAsync();
 
-            long nExStyle = Win32.GetWindowLong(hWnd, Win32.GWL_EXSTYLE);
-            if ((nExStyle & Win32.WS_EX_LAYERED) == 0)
+            //var picker = new GraphicsCapturePicker();
+            //picker.SetWindow(hWnd);
+            //GraphicsCaptureItem item = await picker.PickSingleItemAsync();
+
+            if (item != null)
             {
-                var r2 = Win32.SetWindowLong(hWnd, Win32.GWL_EXSTYLE, (IntPtr)(nExStyle | Win32.WS_EX_LAYERED));
-                var r3 = Win32.SetLayeredWindowAttributes(hWnd, (uint)ColorTranslator.ToWin32(Color.Magenta), 255, Win32.LWA_COLORKEY);
+                //sample.StartCaptureFromItem(item);
             }
         }
 
-        private void SetMica(bool Enable, bool DarkMode)
+        private void StartHwndCapture(IntPtr hwnd)
         {
-            int IsMicaEnabled = Enable ? 1 : 0;
-            var r1 = Win32.DwmSetWindowAttribute(hWnd, (int)Win32.DWMWINDOWATTRIBUTE.DWMWA_MICA_EFFECT, ref IsMicaEnabled, sizeof(int));
-
-            int IsDarkEnabled = DarkMode ? 1 : 0;
-            var r2 = Win32.DwmSetWindowAttribute(hWnd, (int)Win32.DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, ref IsDarkEnabled, sizeof(int));
-        }
-
-        public void SetAcrylic(bool Enable, bool DarkMode) =>
-            SetComposition(Win32.AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND, Enable, DarkMode);
-
-        public void SetBlur(bool Enable, bool DarkMode) =>
-            SetComposition(Win32.AccentState.ACCENT_ENABLE_BLURBEHIND, Enable, DarkMode);
-
-        public void SetComposition(Win32.AccentState AccentState, bool Enable, bool DarkMode)
-        {
-            var Accent = Enable ? new Win32.AccentPolicy()
+            GraphicsCaptureItem item = CaptureHelper.CreateItemForWindow(hwnd);
+            if (item != null)
             {
-                AccentState = AccentState,
-                GradientColor = Convert.ToUInt32(DarkMode ? 0x990000 : 0xFFFFFF)
-            } : new Win32.AccentPolicy() { AccentState = 0 };
+                //sample.StartCaptureFromItem(item);
+            }
+        }
 
-            var StructSize = Marshal.SizeOf(Accent);
-            var Ptr = Marshal.AllocHGlobal(StructSize);
-            Marshal.StructureToPtr(Accent, Ptr, false);
-
-            var data = new Win32.WindowCompositionAttributeData()
+        private void StartHmonCapture(IntPtr hmon)
+        {
+            GraphicsCaptureItem item = CaptureHelper.CreateItemForMonitor(hmon);
+            if (item != null)
             {
-                Attribute = Win32.WindowCompositionAttribute.WCA_ACCENT_POLICY,
-                SizeOfData = StructSize,
-                Data = Ptr
-            };
-
-            var r1 = Win32.SetWindowCompositionAttribute(hWnd, ref data);
-            Marshal.FreeHGlobal(Ptr);
+                //sample.StartCaptureFromItem(item);
+            }
         }
 
-
-        private void Maximize()
-        {
-            Win32.ShowWindow(hWnd, 3);
-        }
-        private void Normal()
-        {
-            Win32.ShowWindow(hWnd, 1);
-        }
     }
 }

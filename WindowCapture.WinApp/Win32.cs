@@ -1,150 +1,380 @@
 ﻿using System;
-using System.Drawing;
+using System.Text;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Graphics.Capture;
+using System.Collections.Generic;
+using Windows.Foundation;
+using System.Numerics;
 
 namespace WindowCapture.WinApp
 {
     public static class Win32
     {
-        public const int WM_ERASEBKGND = 0x0014;
-        public const int WS_EX_LAYERED = 0x00080000;
-        public const uint LWA_COLORKEY = 0x00000001;
-        public const int GWL_EXSTYLE = -20;
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        public static readonly uint WM_GETICON = 0x007f;
+        public static readonly IntPtr ICON_SMALL2 = new IntPtr(2);
+        public static readonly IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
+        public static readonly int GCL_HICON = -14;
+
+        /// <summary>
+        /// check if windows visible
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindowVisible(IntPtr hWnd);
+
+        /// <summary>
+        /// return windows text
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <param name="lpWindowText"></param>
+        /// <param name="nMaxCount"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll", EntryPoint = "GetWindowText", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpWindowText, int nMaxCount);
+
+        /// <summary>
+        /// enumarator on all desktop windows
+        /// </summary>
+        /// <param name="hDesktop"></param>
+        /// <param name="lpEnumCallbackFunction"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll", EntryPoint = "EnumDesktopWindows", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDelegate lpEnumCallbackFunction, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        /// <summary>
+        /// filter function
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
+        public delegate bool EnumDelegate(IntPtr hWnd, int lParam);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr LoadIcon(IntPtr hInstance, IntPtr lpIconName);
+
+        [DllImport("user32.dll", EntryPoint = "GetClassLong")]
+        public static extern uint GetClassLong32(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "GetClassLongPtr")]
+        public static extern IntPtr GetClassLong64(IntPtr hWnd, int nIndex);
+
+        /// <summary>
+        /// 64 bit version maybe loses significant 64-bit specific information
+        /// </summary>
+        public static IntPtr GetClassLongPtr(IntPtr hWnd, int nIndex)
+        {
+            if (IntPtr.Size == 4)
+                return new IntPtr((long)GetClassLong32(hWnd, nIndex));
+            else
+                return GetClassLong64(hWnd, nIndex);
+        }
+
+
+        //public const string IGraphicsCaptureItemInteropExp = @"D:\work\develops\WindowCapture\Debug\IGraphicsCaptureItemInteropExp.dll";
+        public const string IGraphicsCaptureItemInteropExp = @"D:\work\develops\WindowCapture\x64\Debug\IGraphicsCaptureItemInteropExp.dll";
+        //public const string IGraphicsCaptureItemInteropExp = @"D:\work\develops\WindowCapture\x64\Release\IGraphicsCaptureItemInteropExp.dll";
+
+
+        [DllImport(IGraphicsCaptureItemInteropExp, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int AddCustom(int a, int b);
+
+        [DllImport(IGraphicsCaptureItemInteropExp, CallingConvention = CallingConvention.Cdecl)]
+        public static extern GraphicsCaptureItem GetDevTest(IntPtr hWnd);
+
+        [DllImport(IGraphicsCaptureItemInteropExp, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr GetDevTest2(IntPtr hWnd);
+
+    }
+
+    public static class CaptureHelper
+    {
+        static readonly Guid GraphicsCaptureItemGuid = new Guid("79C3F95B-31F7-4EC2-A464-632EF5D30760");
+
+        [ComImport]
+        [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComVisible(true)]
+        public interface IInitializeWithWindow
+        {
+            void Initialize(IntPtr hwnd);
+        }
+
+        [ComImport]
+        [Guid("3628E81B-3CAC-4C60-B7F4-23CE0E0C3356")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComVisible(true)]
+        public interface IGraphicsCaptureItemInterop
+        {
+            IntPtr CreateForWindow([In] IntPtr window, [In] ref Guid iid);
+
+            IntPtr CreateForMonitor([In] IntPtr monitor, [In] ref Guid iid);
+        }
+
+        [ComImport]
+        [Guid("3A3DCD6C-3EAB-43DC-BCDE-45671CE800C8")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        public interface IDataTransferManagerInterop
+        {
+            IntPtr GetForWindow([In] IntPtr appWindow, [In] ref Guid riid);
+            void ShowShareUIForWindow(IntPtr appWindow);
+        }
+
+        //public static void SetWindow(this GraphicsCapturePicker picker, IntPtr hwnd)
+        //{
+        //    var interop = (IInitializeWithWindow)(object)picker;
+        //    interop.Initialize(hwnd);
+        //}
+
+        public static GraphicsCaptureItem CreateItemForWindow(IntPtr hwnd)
+        {
+            //Windows.ApplicationModel.DataTransfer
+            //IDataTransferManagerInterop interop = DataTransferManager.As<IDataTransferManagerInterop>();
+            //Guid id = new Guid(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
+            //var r = interop.CreateForWindow(hwnd, id);
+
+            //System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeMarshal
+            IActivationFactory factory = WindowsRuntimeMarshal.GetActivationFactory(typeof(GraphicsCaptureItem));
+            var interop = (IGraphicsCaptureItemInterop)factory;
+            var temp = typeof(GraphicsCaptureItem);
+            var itemPointer = interop.CreateForWindow(hwnd, GraphicsCaptureItemGuid);
+            var item = Marshal.GetObjectForIUnknown(itemPointer) as GraphicsCaptureItem;
+            Marshal.Release(itemPointer);
+
+            //return item;
+
+            return null;
+        }
+
+        public static GraphicsCaptureItem CreateItemForMonitor(IntPtr hmon)
+        {
+            //var factory = WindowsRuntimeMarshal.GetActivationFactory(typeof(GraphicsCaptureItem));
+            //var interop = (IGraphicsCaptureItemInterop)factory;
+            //var temp = typeof(GraphicsCaptureItem);
+            //var itemPointer = interop.CreateForMonitor(hmon, GraphicsCaptureItemGuid);
+            //var item = Marshal.GetObjectForIUnknown(itemPointer) as GraphicsCaptureItem;
+            //Marshal.Release(itemPointer);
+
+            //return item;
+
+            return null;
+        }
+    }
+
+    public static class WindowEnumerationHelper
+    {
+        enum GetAncestorFlags
+        {
+            // Retrieves the parent window. This does not include the owner, as it does with the GetParent function.
+            GetParent = 1,
+            // Retrieves the root window by walking the chain of parent windows.
+            GetRoot = 2,
+            // Retrieves the owned root window by walking the chain of parent and owner windows returned by GetParent.
+            GetRootOwner = 3
+        }
+
+        public enum GWL
+        {
+            GWL_WNDPROC = (-4),
+            GWL_HINSTANCE = (-6),
+            GWL_HWNDPARENT = (-8),
+            GWL_STYLE = (-16),
+            GWL_EXSTYLE = (-20),
+            GWL_USERDATA = (-21),
+            GWL_ID = (-12)
+        }
+
+        [Flags]
+        private enum WindowStyles : uint
+        {
+            WS_BORDER = 0x800000,
+            WS_CAPTION = 0xc00000,
+            WS_CHILD = 0x40000000,
+            WS_CLIPCHILDREN = 0x2000000,
+            WS_CLIPSIBLINGS = 0x4000000,
+            WS_DISABLED = 0x8000000,
+            WS_DLGFRAME = 0x400000,
+            WS_GROUP = 0x20000,
+            WS_HSCROLL = 0x100000,
+            WS_MAXIMIZE = 0x1000000,
+            WS_MAXIMIZEBOX = 0x10000,
+            WS_MINIMIZE = 0x20000000,
+            WS_MINIMIZEBOX = 0x20000,
+            WS_OVERLAPPED = 0x0,
+            WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_SIZEFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+            WS_POPUP = 0x80000000u,
+            WS_POPUPWINDOW = WS_POPUP | WS_BORDER | WS_SYSMENU,
+            WS_SIZEFRAME = 0x40000,
+            WS_SYSMENU = 0x80000,
+            WS_TABSTOP = 0x10000,
+            WS_VISIBLE = 0x10000000,
+            WS_VSCROLL = 0x200000
+        }
+
+        enum DWMWINDOWATTRIBUTE : uint
+        {
+            NCRenderingEnabled = 1,
+            NCRenderingPolicy,
+            TransitionsForceDisabled,
+            AllowNCPaint,
+            CaptionButtonBounds,
+            NonClientRtlLayout,
+            ForceIconicRepresentation,
+            Flip3DPolicy,
+            ExtendedFrameBounds,
+            HasIconicBitmap,
+            DisallowPeek,
+            ExcludedFromPeek,
+            Cloak,
+            Cloaked,
+            FreezeRepresentation
+        }
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetShellWindow();
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("user32.dll", ExactSpelling = true)]
+        static extern IntPtr GetAncestor(IntPtr hwnd, GetAncestorFlags flags);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
+        static extern IntPtr GetWindowLongPtr32(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
+        static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
+
+        // This static method is required because Win32 does not support
+        // GetWindowLongPtr directly.
+        // http://pinvoke.net/default.aspx/user32/GetWindowLong.html
+        static IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex)
+        {
+            if (IntPtr.Size == 8)
+                return GetWindowLongPtr64(hWnd, nIndex);
+            else
+                return GetWindowLongPtr32(hWnd, nIndex);
+        }
+
+        [DllImport("dwmapi.dll")]
+        static extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, out bool pvAttribute, int cbAttribute);
+
+        public static bool IsWindowValidForCapture(IntPtr hwnd)
+        {
+            if (hwnd.ToInt32() == 0)
+            {
+                return false;
+            }
+
+            if (hwnd == GetShellWindow())
+            {
+                return false;
+            }
+
+            if (!IsWindowVisible(hwnd))
+            {
+                return false;
+            }
+
+            if (GetAncestor(hwnd, GetAncestorFlags.GetRoot) != hwnd)
+            {
+                return false;
+            }
+
+            var style = (WindowStyles)(uint)GetWindowLongPtr(hwnd, (int)GWL.GWL_STYLE).ToInt64();
+            if (style.HasFlag(WindowStyles.WS_DISABLED))
+            {
+                return false;
+            }
+
+            var cloaked = false;
+            var hrTemp = DwmGetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.Cloaked, out cloaked, Marshal.SizeOf<bool>());
+            if (hrTemp == 0 && cloaked)
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    public class MonitorInfo
+    {
+        public bool IsPrimary { get; set; }
+        public Vector2 ScreenSize { get; set; }
+        public Rect MonitorArea { get; set; }
+        public Rect WorkArea { get; set; }
+        public string DeviceName { get; set; }
+        public IntPtr Hmon { get; set; }
+    }
+
+    public static class MonitorEnumerationHelper
+    {
+        delegate bool EnumMonitorsDelegate(IntPtr hMonitor, IntPtr hdcMonitor, ref RECT lprcMonitor, IntPtr dwData);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
-            public RECT(int Left, int Top, int Right, int Bottom)
-            {
-                left = Left;
-                top = Top;
-                right = Right;
-                bottom = Bottom;
-            }
-
             public int left;
             public int top;
             public int right;
             public int bottom;
         }
 
-        [DllImport("User32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
-
-        [DllImport("User32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern bool FillRect(IntPtr hdc, [In] ref RECT rect, IntPtr hbrush);
-
-        [DllImport("Gdi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern IntPtr CreateSolidBrush(int crColor);
-
-        [DllImport("Gdi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern bool DeleteObject([In] IntPtr hObject);
-
-        public delegate int SUBCLASSPROC(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, uint dwRefData);
-
-        public static SUBCLASSPROC? SubClassDelegate;
-
-        [DllImport("Comctl32.dll", SetLastError = true)]
-        public static extern bool SetWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, uint uIdSubclass, uint dwRefData);
-
-        [DllImport("Comctl32.dll", SetLastError = true)]
-        public static extern int DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
-
-        public static int WindowSubClass(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, uint dwRefData)
+        private const int CCHDEVICENAME = 32;
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        internal struct MonitorInfoEx
         {
-            switch (uMsg)
-            {
-                case WM_ERASEBKGND:
+            public int Size;
+            public RECT Monitor;
+            public RECT WorkArea;
+            public uint Flags;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCHDEVICENAME)]
+            public string DeviceName;
+        }
+
+        [DllImport("user32.dll")]
+        static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lprcClip, EnumMonitorsDelegate lpfnEnum, IntPtr dwData);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern bool GetMonitorInfo(IntPtr hMonitor, ref MonitorInfoEx lpmi);
+
+        public static IEnumerable<MonitorInfo> GetMonitors()
+        {
+            var result = new List<MonitorInfo>();
+
+            EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero,
+                delegate (IntPtr hMonitor, IntPtr hdcMonitor, ref RECT lprcMonitor, IntPtr dwData)
+                {
+                    MonitorInfoEx mi = new MonitorInfoEx();
+                    mi.Size = Marshal.SizeOf(mi);
+                    bool success = GetMonitorInfo(hMonitor, ref mi);
+                    if (success)
                     {
-                        RECT rect;
-                        GetClientRect(hWnd, out rect);
-
-                        rect.right = 0;
-
-                        IntPtr hBrush = CreateSolidBrush(ColorTranslator.ToWin32(Color.Magenta));
-                        FillRect(wParam, ref rect, hBrush);
-                        DeleteObject(hBrush);
-                        return 1;
+                        var info = new MonitorInfo
+                        {
+                            ScreenSize = new Vector2(mi.Monitor.right - mi.Monitor.left, mi.Monitor.bottom - mi.Monitor.top),
+                            MonitorArea = new Rect(mi.Monitor.left, mi.Monitor.top, mi.Monitor.right - mi.Monitor.left, mi.Monitor.bottom - mi.Monitor.top),
+                            WorkArea = new Rect(mi.WorkArea.left, mi.WorkArea.top, mi.WorkArea.right - mi.WorkArea.left, mi.WorkArea.bottom - mi.WorkArea.top),
+                            IsPrimary = mi.Flags > 0,
+                            Hmon = hMonitor,
+                            DeviceName = mi.DeviceName
+                        };
+                        result.Add(info);
                     }
-            }
-
-            return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+                    return true;
+                }, IntPtr.Zero);
+            return result;
         }
-
-        public static IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
-        {
-            if (IntPtr.Size == 4)
-                return SetWindowLongPtr32(hWnd, nIndex, dwNewLong);
-            return SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
-        }
-
-        [DllImport("User32.dll", CharSet = CharSet.Auto, EntryPoint = "SetWindowLong")]
-        public static extern IntPtr SetWindowLongPtr32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
-        [DllImport("User32.dll", CharSet = CharSet.Auto, EntryPoint = "SetWindowLongPtr")]
-        public static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
-        public static long GetWindowLong(IntPtr hWnd, int nIndex)
-        {
-            if (IntPtr.Size == 4)
-                return GetWindowLong32(hWnd, nIndex);
-            return GetWindowLongPtr64(hWnd, nIndex);
-        }
-
-        [DllImport("User32.dll", EntryPoint = "GetWindowLong", CharSet = CharSet.Auto)]
-        public static extern long GetWindowLong32(IntPtr hWnd, int nIndex);
-
-        [DllImport("User32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Auto)]
-        public static extern long GetWindowLongPtr64(IntPtr hWnd, int nIndex);
-
-        [DllImport("User32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
-
-        [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        public enum DWMWINDOWATTRIBUTE
-        {
-            DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
-            DWMWA_MICA_EFFECT = 1029
-        };
-
-        [DllImport("dwmapi.dll", PreserveSig = true)]
-        public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
-
-        public enum AccentState
-        {
-            ACCENT_DISABLED = 0,
-            ACCENT_ENABLE_GRADIENT = 1,
-            ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-            ACCENT_ENABLE_BLURBEHIND = 3,
-            ACCENT_ENABLE_ACRYLICBLURBEHIND = 4,
-            ACCENT_INVALID_STATE = 5
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct AccentPolicy
-        {
-            public AccentState AccentState;
-            public uint AccentFlags;
-            public uint GradientColor;
-            public uint AnimationId;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct WindowCompositionAttributeData
-        {
-            public WindowCompositionAttribute Attribute;
-            public IntPtr Data;
-            public int SizeOfData;
-        }
-
-        public enum WindowCompositionAttribute
-        {
-            WCA_ACCENT_POLICY = 19
-        }
-
-        [DllImport("user32.dll")]
-        public static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
     }
 }

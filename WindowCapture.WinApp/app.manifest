@@ -11,7 +11,7 @@
       <supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}" />
     </application>
   </compatibility>
-  
+
   <application xmlns="urn:schemas-microsoft-com:asm.v3">
     <windowsSettings>
       <!-- The combination of below two tags have the following effect:

@@ -70,8 +70,16 @@ namespace WindowCapture.WinApp
             #endregion InitWindowList
 
             var process = processes
-                .FirstOrDefault(x => x.MainWindowTitle.Equals("ÏÐÎÕÎÆÄÅÍÈÅ RISEN 3 | ×ÀÑÒÜ 18 - ÒÅÏËÀß ÂÑÒÐÅ×À - YouTube - Google Chrome"));
+                .FirstOrDefault(x => x.MainWindowTitle.Equals("Äèñïåò÷åð çàäà÷"));
             var processHWND = process.MainWindowHandle;
+            Microsoft.UI.WindowId h = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(processHWND);
+            Windows.UI.WindowId hh = new Windows.UI.WindowId(h.Value);
+
+            IntPtr hWnd2 = WinRT.Interop.WindowNative.GetWindowHandle(this);
+
+            var pdi = Windows.System.Diagnostics.ProcessDiagnosticInfo.TryGetForProcessId((uint)process.Id);
+
+            // var g = GraphicsCaptureItem.TryCreateFromWindowId(hh);
             StartHwndCapture(processHWND);
 
             ObservableCollection<MonitorInfo> monitors = new();

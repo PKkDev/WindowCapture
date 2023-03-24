@@ -137,18 +137,23 @@ namespace WindowCapture.WinApp
 
         public static GraphicsCaptureItem CreateItemForWindow(IntPtr hwnd)
         {
+            var interop = GraphicsCaptureItem.As<IGraphicsCaptureItemInterop>();
+            var itemPointer = interop.CreateForWindow(hwnd, GraphicsCaptureItemGuid);
+            var item = Marshal.GetObjectForIUnknown(itemPointer) as GraphicsCaptureItem;
+            Marshal.Release(itemPointer);
+            return item;
+
             //Windows.ApplicationModel.DataTransfer
             //IDataTransferManagerInterop interop = DataTransferManager.As<IDataTransferManagerInterop>();
             //Guid id = new Guid(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
             //var r = interop.CreateForWindow(hwnd, id);
 
-            //System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeMarshal
-            IActivationFactory factory = WindowsRuntimeMarshal.GetActivationFactory(typeof(GraphicsCaptureItem));
-            var interop = (IGraphicsCaptureItemInterop)factory;
-            var temp = typeof(GraphicsCaptureItem);
-            var itemPointer = interop.CreateForWindow(hwnd, GraphicsCaptureItemGuid);
-            var item = Marshal.GetObjectForIUnknown(itemPointer) as GraphicsCaptureItem;
-            Marshal.Release(itemPointer);
+            //IActivationFactory factory = WindowsRuntimeMarshal.GetActivationFactory(typeof(GraphicsCaptureItem));
+            //var interop = (IGraphicsCaptureItemInterop)factory;
+            //var temp = typeof(GraphicsCaptureItem);
+            //var itemPointer = interop.CreateForWindow(hwnd, GraphicsCaptureItemGuid);
+            //var item = Marshal.GetObjectForIUnknown(itemPointer) as GraphicsCaptureItem;
+            //Marshal.Release(itemPointer);
 
             //return item;
 

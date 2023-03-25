@@ -226,37 +226,25 @@ namespace WindowCapture.WinApp
         public static bool IsWindowValidForCapture(IntPtr hwnd)
         {
             if (hwnd.ToInt32() == 0)
-            {
                 return false;
-            }
 
             if (hwnd == GetShellWindow())
-            {
                 return false;
-            }
 
             if (!IsWindowVisible(hwnd))
-            {
                 return false;
-            }
 
             if (GetAncestor(hwnd, GetAncestorFlags.GetRoot) != hwnd)
-            {
                 return false;
-            }
 
             var style = (WindowStyles)(uint)GetWindowLongPtr(hwnd, (int)GWL.GWL_STYLE).ToInt64();
             if (style.HasFlag(WindowStyles.WS_DISABLED))
-            {
                 return false;
-            }
 
             var cloaked = false;
             var hrTemp = DwmGetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.Cloaked, out cloaked, Marshal.SizeOf<bool>());
             if (hrTemp == 0 && cloaked)
-            {
                 return false;
-            }
 
             return true;
         }

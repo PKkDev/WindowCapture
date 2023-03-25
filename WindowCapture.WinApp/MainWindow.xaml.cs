@@ -73,7 +73,7 @@ namespace WindowCapture.WinApp
                 .FirstOrDefault(x => x.MainWindowTitle.Equals("Диспетчер задач"));
             var processHWND = process.MainWindowHandle;
             Microsoft.UI.WindowId h = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(processHWND);
-            Windows.UI.WindowId hh = new Windows.UI.WindowId(h.Value);
+            //Windows.UI.WindowId hh = new Windows.UI.WindowId(h.Value);
 
             IntPtr hWnd2 = WinRT.Interop.WindowNative.GetWindowHandle(this);
 
@@ -148,6 +148,8 @@ namespace WindowCapture.WinApp
             WinRT.Interop.InitializeWithWindow.Initialize(picker, hWnd);
             GraphicsCaptureItem item = await picker.PickSingleItemAsync();
 
+
+
             //var picker = new GraphicsCapturePicker();
             //picker.SetWindow(hWnd);
             //GraphicsCaptureItem item = await picker.PickSingleItemAsync();
@@ -160,7 +162,8 @@ namespace WindowCapture.WinApp
 
         private void StartHwndCapture(IntPtr hwnd)
         {
-            GraphicsCaptureItem item = CaptureHelper.CreateItemForWindow(hwnd);
+            // GraphicsCaptureItem item = CaptureHelper.CreateItemForWindow(hwnd);
+            GraphicsCaptureItem item = CaptureHelper.CreateItemForWindowV2(hwnd);
             if (item != null)
             {
                 //sample.StartCaptureFromItem(item);

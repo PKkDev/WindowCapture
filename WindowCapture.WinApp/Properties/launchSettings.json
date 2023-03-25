@@ -1,7 +1,8 @@
 {
   "profiles": {
     "WindowCapture.WinApp (Package)": {
-      "commandName": "MsixPackage"
+      "commandName": "MsixPackage",
+      "nativeDebugging": false
     },
     "WindowCapture.WinApp (Unpackaged)": {
       "commandName": "Project"

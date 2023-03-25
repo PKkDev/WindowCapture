@@ -162,8 +162,7 @@ namespace WindowCapture.WinApp
 
         private void StartHwndCapture(IntPtr hwnd)
         {
-            // GraphicsCaptureItem item = CaptureHelper.CreateItemForWindow(hwnd);
-            GraphicsCaptureItem item = CaptureHelper.CreateItemForWindowV2(hwnd);
+            GraphicsCaptureItem item = CaptureHelper.CreateItemForWindow(hwnd);
             if (item != null)
             {
                 //sample.StartCaptureFromItem(item);

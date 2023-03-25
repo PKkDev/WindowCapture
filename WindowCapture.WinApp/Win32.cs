@@ -81,7 +81,7 @@ namespace WindowCapture.WinApp
 
     public static class CaptureHelper
     {
-        static readonly Guid GraphicsCaptureItemGuid = new Guid("79C3F95B-31F7-4EC2-A464-632EF5D30760");
+        static readonly Guid GraphicsCaptureItemGuid = new("79C3F95B-31F7-4EC2-A464-632EF5D30760");
 
         [ComImport]
         [Guid("3628E81B-3CAC-4C60-B7F4-23CE0E0C3356")]
@@ -104,7 +104,6 @@ namespace WindowCapture.WinApp
             IntPtr itemPointer = interop.CreateForWindow(hwnd, GraphicsCaptureItemGuid);
 
             GraphicsCaptureItem item = GraphicsCaptureItem.FromAbi(itemPointer);
-            GraphicsCaptureItem item2 = Marshal.GetObjectForIUnknown(itemPointer) as GraphicsCaptureItem;
 
             var releaseRes = Marshal.Release(itemPointer);
 
@@ -117,7 +116,7 @@ namespace WindowCapture.WinApp
             IntPtr itemPointer = interop.CreateForMonitor(hmon, GraphicsCaptureItemGuid);
 
             GraphicsCaptureItem item = GraphicsCaptureItem.FromAbi(itemPointer);
-            GraphicsCaptureItem item2 = Marshal.GetObjectForIUnknown(itemPointer) as GraphicsCaptureItem;
+            //GraphicsCaptureItem item2 = Marshal.GetObjectForIUnknown(itemPointer) as GraphicsCaptureItem;
 
             var releaseRes = Marshal.Release(itemPointer);
 

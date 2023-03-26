@@ -33,6 +33,9 @@ using WindowCapture.WinApp.Helpers;
 using Windows.Media.Audio;
 using System.Linq;
 using Windows.Media.Capture;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using Windows.Foundation.Metadata;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -447,10 +450,32 @@ namespace WindowCapture.WinApp.MVVM.View
 
         private async void Click_SelectGraphicsCapture(object sender, RoutedEventArgs e)
         {
-            GraphicsCapturePicker picker = new();
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
-            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
-            GraphicsCaptureItem captureItem = await picker.PickSingleItemAsync();
+
+            #region TEST
+
+            ObservableCollection<Process> processes = new();
+
+            if (ApiInformation.IsApiContractPresent(typeof(Windows.Foundation.UniversalApiContract).FullName, 8))
+            {
+                var processesWithWindows = from p in Process.GetProcesses()
+                                           where !string.IsNullOrWhiteSpace(p.MainWindowTitle) && WindowEnumerationHelper.IsWindowValidForCapture(p.MainWindowHandle)
+                                           select p;
+                processes = new ObservableCollection<Process>(processesWithWindows);
+            }
+
+            var process = processes
+                .FirstOrDefault(x => x.MainWindowTitle.Equals("Диспетчер задач"));
+            var processHWND = process.MainWindowHandle;
+
+            GraphicsCaptureItem captureItem = CaptureHelper.CreateItemForWindow(processHWND);
+
+            #endregion TEST
+
+
+            //GraphicsCapturePicker picker = new();
+            //var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+            //WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+            //GraphicsCaptureItem captureItem = await picker.PickSingleItemAsync();
 
             if (captureItem != null)
             {

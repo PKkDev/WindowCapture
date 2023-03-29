@@ -39,29 +39,31 @@ namespace CaptureHelper
 
         public static IEnumerable<MonitorInfo> GetMonitors()
         {
-            var result = new List<MonitorInfo>();
+            List<MonitorInfo> result = new();
 
-            EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero,
-                delegate (IntPtr hMonitor, IntPtr hdcMonitor, ref RECT lprcMonitor, IntPtr dwData)
+            EnumMonitorsDelegate lpfnEnum = (IntPtr hMonitor, IntPtr hdcMonitor, ref RECT lprcMonitor, IntPtr dwData) =>
+            {
+                MonitorInfoEx mi = new();
+                mi.Size = Marshal.SizeOf(mi);
+                bool success = GetMonitorInfo(hMonitor, ref mi);
+                if (success)
                 {
-                    MonitorInfoEx mi = new();
-                    mi.Size = Marshal.SizeOf(mi);
-                    bool success = GetMonitorInfo(hMonitor, ref mi);
-                    if (success)
+                    MonitorInfo info = new()
                     {
-                        MonitorInfo info = new()
-                        {
-                            ScreenSize = new Vector2(mi.Monitor.right - mi.Monitor.left, mi.Monitor.bottom - mi.Monitor.top),
-                            MonitorArea = new Rect(mi.Monitor.left, mi.Monitor.top, mi.Monitor.right - mi.Monitor.left, mi.Monitor.bottom - mi.Monitor.top),
-                            WorkArea = new Rect(mi.WorkArea.left, mi.WorkArea.top, mi.WorkArea.right - mi.WorkArea.left, mi.WorkArea.bottom - mi.WorkArea.top),
-                            IsPrimary = mi.Flags > 0,
-                            Hmon = hMonitor,
-                            DeviceName = mi.DeviceName
-                        };
-                        result.Add(info);
-                    }
-                    return true;
-                }, IntPtr.Zero);
+                        ScreenSize = new Vector2(mi.Monitor.right - mi.Monitor.left, mi.Monitor.bottom - mi.Monitor.top),
+                        MonitorArea = new Rect(mi.Monitor.left, mi.Monitor.top, mi.Monitor.right - mi.Monitor.left, mi.Monitor.bottom - mi.Monitor.top),
+                        WorkArea = new Rect(mi.WorkArea.left, mi.WorkArea.top, mi.WorkArea.right - mi.WorkArea.left, mi.WorkArea.bottom - mi.WorkArea.top),
+                        IsPrimary = mi.Flags > 0,
+                        Hmon = hMonitor,
+                        DeviceName = mi.DeviceName
+                    };
+                    result.Add(info);
+                }
+                return true;
+            };
+
+            EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, lpfnEnum, IntPtr.Zero);
+
             return result;
         }
     }

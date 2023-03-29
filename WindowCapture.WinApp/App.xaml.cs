@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using WindowCapture.WinApp.Dilogs.CaptureItemSelect;
 using WindowCapture.WinApp.MVVM.View;
 using WindowCapture.WinApp.MVVM.ViewModel;
 using WindowCapture.WinApp.Service;
@@ -69,12 +70,15 @@ namespace WindowCapture.WinApp
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            MainWindow = new MainWindow();
+            //MainWindow = new MainWindow();
 
-            _shell = App.GetService<ShellPage>();
-            MainWindow.Content = _shell ?? new Frame();
+            //_shell = App.GetService<ShellPage>();
+            //MainWindow.Content = _shell ?? new Frame();
 
-            MainWindow.Activate();
+            //MainWindow.Activate();
+
+            var w = new CapureItemSelectorWindow();
+            w.Activate();
         }
     }
 }

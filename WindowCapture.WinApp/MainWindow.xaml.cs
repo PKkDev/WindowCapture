@@ -12,8 +12,8 @@ using Windows.Graphics.Capture;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Windows.Foundation.Metadata;
-using static WindowCapture.WinApp.WindowEnumerationHelper;
 using System.Threading.Tasks;
+using CaptureHelper;
 
 namespace WindowCapture.WinApp
 {
@@ -30,6 +30,8 @@ namespace WindowCapture.WinApp
         private IntPtr hWnd;
         private Microsoft.UI.Windowing.AppWindow App;
         Microsoft.UI.WindowId windowId;
+
+        public int Test { get; set; } = 50;
 
         public MainWindow()
         {
@@ -162,7 +164,7 @@ namespace WindowCapture.WinApp
 
         private void StartHwndCapture(IntPtr hwnd)
         {
-            GraphicsCaptureItem item = CaptureHelper.CreateItemForWindow(hwnd);
+            GraphicsCaptureItem item = CaptureCreateHelper.CreateItemForWindow(hwnd);
             if (item != null)
             {
                 //sample.StartCaptureFromItem(item);
@@ -171,7 +173,7 @@ namespace WindowCapture.WinApp
 
         private void StartHmonCapture(IntPtr hmon)
         {
-            GraphicsCaptureItem item = CaptureHelper.CreateItemForMonitor(hmon);
+            GraphicsCaptureItem item = CaptureCreateHelper.CreateItemForMonitor(hmon);
             if (item != null)
             {
                 //sample.StartCaptureFromItem(item);

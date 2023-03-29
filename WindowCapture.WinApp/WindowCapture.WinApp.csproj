@@ -23,6 +23,7 @@
     <Content Remove="Assets\Icons\mp4.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Dilogs\CaptureItemSelect\CapureItemSelectorWindow.xaml" />
     <None Remove="MVVM\View\CapturePage.xaml" />
     <None Remove="MVVM\View\MediaFolderPage.xaml" />
     <None Remove="MVVM\View\SettingsPage.xaml" />
@@ -59,12 +60,18 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CaptureHelper\CaptureHelper.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="Assets\Icons\mp3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Icons\mp4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Dilogs\CaptureItemSelect\CapureItemSelectorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="MVVM\View\MediaFolderPage.xaml">

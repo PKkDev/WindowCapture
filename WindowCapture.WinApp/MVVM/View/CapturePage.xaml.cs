@@ -36,6 +36,7 @@ using Windows.Media.Capture;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Windows.Foundation.Metadata;
+using Windows.ApplicationModel.Core;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -453,29 +454,58 @@ namespace WindowCapture.WinApp.MVVM.View
 
             #region TEST
 
-            ObservableCollection<Process> processes = new();
+            //ObservableCollection<Process> processes = new();
 
-            if (ApiInformation.IsApiContractPresent(typeof(Windows.Foundation.UniversalApiContract).FullName, 8))
-            {
-                var processesWithWindows = from p in Process.GetProcesses()
-                                           where !string.IsNullOrWhiteSpace(p.MainWindowTitle) && WindowEnumerationHelper.IsWindowValidForCapture(p.MainWindowHandle)
-                                           select p;
-                processes = new ObservableCollection<Process>(processesWithWindows);
-            }
+            //if (ApiInformation.IsApiContractPresent(typeof(Windows.Foundation.UniversalApiContract).FullName, 8))
+            //{
+            //    var processesWithWindows = from p in Process.GetProcesses()
+            //                               where !string.IsNullOrWhiteSpace(p.MainWindowTitle) && WindowEnumerationHelper.IsWindowValidForCapture(p.MainWindowHandle)
+            //                               select p;
+            //    processes = new ObservableCollection<Process>(processesWithWindows);
+            //}
 
-            var process = processes
-                .FirstOrDefault(x => x.MainWindowTitle.Equals("Диспетчер задач"));
-            var processHWND = process.MainWindowHandle;
+            //var process = processes
+            //    .FirstOrDefault(x => x.MainWindowTitle.Equals("Диспетчер задач"));
+            //var processHWND = process.MainWindowHandle;
 
-            GraphicsCaptureItem captureItem = CaptureHelper.CreateItemForWindow(processHWND);
+            //GraphicsCaptureItem captureItem = CaptureHelper.CreateItemForWindow(processHWND);
 
             #endregion TEST
 
-
-            //GraphicsCapturePicker picker = new();
+            //DevicePicker devicePicker = new();
+            //devicePicker.Filter.SupportedDeviceClasses.Add(DeviceClass.All);
             //var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
-            //WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
-            //GraphicsCaptureItem captureItem = await picker.PickSingleItemAsync();
+            //WinRT.Interop.InitializeWithWindow.Initialize(devicePicker, hwnd);
+            //Windows.Foundation.Rect rect = new Windows.Foundation.Rect(new Windows.Foundation.Point(0, 0), new Windows.Foundation.Point(0, 0));
+            //DeviceInformation di = await devicePicker.PickSingleDeviceAsync(rect);
+            //if (di != null) { }
+
+
+            //CoreApplicationView newView = CoreApplication.CreateNewView();
+
+            //App.MainWindow.DispatcherQueue.TryEnqueue(async () =>
+            //{
+            //    UIElement? _shell = App.GetService<ShellPage>();
+
+            //    Windows.UI.WindowManagement.AppWindow appWindow = await Windows.UI.WindowManagement.AppWindow.TryCreateAsync();
+            //    //Windows.UI.Xaml.Hosting.ElementCompositionPreview.SetAppWindowContent(appWindow, _shell);
+            //    await appWindow.TryShowAsync();
+            //});
+
+
+            //var newWindow = new MainWindow();
+            //newWindow.Content = _shell ?? new Frame();
+            //newWindow.Closed += (sender, e) =>
+            //{
+
+            //};
+            //newWindow.Activate();
+
+
+            GraphicsCapturePicker picker = new();
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+            GraphicsCaptureItem captureItem = await picker.PickSingleItemAsync();
 
             if (captureItem != null)
             {

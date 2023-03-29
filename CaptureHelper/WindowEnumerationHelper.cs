@@ -7,7 +7,8 @@ namespace CaptureHelper
     {
         enum GetAncestorFlags
         {
-            // Retrieves the parent window. This does not include the owner, as it does with the GetParent function.
+            // Retrieves the parent window.
+            // This does not include the owner, as it does with the GetParent function.
             GetParent = 1,
             // Retrieves the root window by walking the chain of parent windows.
             GetRoot = 2,

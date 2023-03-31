@@ -137,7 +137,6 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
             var selected = WindowsList.SelectedItem;
             if (selected is WindowInfo wf)
             {
-                var wc = Window.Current;
             }
         }
 

@@ -87,9 +87,6 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
             var selected = MonitorsList.SelectedItem;
             if (selected is MonitorInfo wf)
             {
-                IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(Window.Current);
-                var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-                var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
             }
         }
 

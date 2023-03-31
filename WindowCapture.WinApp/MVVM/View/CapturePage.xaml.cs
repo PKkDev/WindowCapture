@@ -1024,8 +1024,8 @@ namespace WindowCapture.WinApp.MVVM.View
         {
             // ICaptureItemPage
 
-            MethodInfo methodInfo =  TypeItemSelectPage.GetMethod("DoTest");
-            var res = methodInfo.Invoke(null, null);
+            //MethodInfo methodInfo =  TypeItemSelectPage.GetMethod("DoTest");
+            //var res = methodInfo.Invoke(null, null);
 
             ChangeInnerDIalogSate();
         }

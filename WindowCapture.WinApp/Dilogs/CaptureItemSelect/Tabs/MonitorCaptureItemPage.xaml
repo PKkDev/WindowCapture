@@ -1,0 +1,39 @@
+<Page
+    x:Class="WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs.MonitorCaptureItemPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+
+        <GridView x:Name="MonitorsList" ItemsSource="{x:Bind MonitorInfos}" SelectionMode="Single" IsItemClickEnabled="False" SelectionChanged="GridView_SelectionChanged">
+
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Frame Width="180" Height="180" Padding="5">
+                            <Grid>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{Binding DeviceName}" TextWrapping="Wrap"/>
+
+                                <Image Grid.Row="1" Width="180" Height="155" Stretch="Uniform" Source="{Binding PreviewSource, Mode=OneWay}"/>
+
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+
+        </GridView>
+
+    </Grid>
+
+</Page>

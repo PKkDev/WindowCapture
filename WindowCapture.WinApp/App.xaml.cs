@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -70,15 +71,29 @@ namespace WindowCapture.WinApp
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            //MainWindow = new MainWindow();
+            MainWindow = new MainWindow();
 
-            //_shell = App.GetService<ShellPage>();
-            //MainWindow.Content = _shell ?? new Frame();
+            _shell = App.GetService<ShellPage>();
+            MainWindow.Content = _shell ?? new Frame();
 
-            //MainWindow.Activate();
+            MainWindow.Activate();
 
-            var w = new CapureItemSelectorWindow();
-            w.Activate();
+            //var w = new CapureItemSelectorWindow();
+            //w.Activate();
+
+            //SetWindowSize(w);
+        }
+
+        private void SetWindowSize(Window mainWindow)
+        {
+            IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
+            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 500, Height = 450 });
+
+            OverlappedPresenter overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
+            overlappedPresenter.IsResizable = false;
         }
     }
 }

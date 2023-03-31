@@ -37,6 +37,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Windows.Foundation.Metadata;
 using Windows.ApplicationModel.Core;
+using WindowCapture.WinApp.Dilogs.CaptureItemSelect;
+using Microsoft.UI.Windowing;
+using WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -449,6 +452,27 @@ namespace WindowCapture.WinApp.MVVM.View
             ElementCompositionPreview.SetElementChildVisual(gridToPreview, visual);
         }
 
+        private async void Click_SelectGraphicsCaptureV2(object sender, RoutedEventArgs e)
+        {
+            var newWindow = new CapureItemSelectorWindow();
+
+            newWindow.Closed += (sender, e) =>
+            {
+
+            };
+
+            IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(newWindow);
+            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 500, Height = 450 });
+
+            OverlappedPresenter overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
+            overlappedPresenter.IsResizable = false;
+
+            newWindow.Activate();
+        }
+
         private async void Click_SelectGraphicsCapture(object sender, RoutedEventArgs e)
         {
 
@@ -493,13 +517,7 @@ namespace WindowCapture.WinApp.MVVM.View
             //});
 
 
-            //var newWindow = new MainWindow();
-            //newWindow.Content = _shell ?? new Frame();
-            //newWindow.Closed += (sender, e) =>
-            //{
 
-            //};
-            //newWindow.Activate();
 
 
             GraphicsCapturePicker picker = new();

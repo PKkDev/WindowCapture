@@ -24,6 +24,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Dilogs\CaptureItemSelect\CapureItemSelectorWindow.xaml" />
+    <None Remove="Dilogs\CaptureItemSelect\Tabs\MonitorCaptureItemPage.xaml" />
+    <None Remove="Dilogs\CaptureItemSelect\Tabs\WindowCaptureItemPage.xaml" />
     <None Remove="MVVM\View\CapturePage.xaml" />
     <None Remove="MVVM\View\MediaFolderPage.xaml" />
     <None Remove="MVVM\View\SettingsPage.xaml" />
@@ -69,6 +71,12 @@
     <None Update="Assets\Icons\mp4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Dilogs\CaptureItemSelect\Tabs\MonitorCaptureItemPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Dilogs\CaptureItemSelect\Tabs\WindowCaptureItemPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Dilogs\CaptureItemSelect\CapureItemSelectorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

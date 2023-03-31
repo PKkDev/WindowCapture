@@ -14,6 +14,8 @@ namespace WindowCapture.WinApp
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         public static readonly uint WM_GETICON = 0x007f;
+        public static readonly IntPtr ICON_BIG = new IntPtr(0);
+        public static readonly IntPtr ICON_SMALL = new IntPtr(1);
         public static readonly IntPtr ICON_SMALL2 = new IntPtr(2);
         public static readonly IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
         public static readonly int GCL_HICON = -14;

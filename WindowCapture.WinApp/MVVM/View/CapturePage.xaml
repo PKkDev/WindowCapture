@@ -21,6 +21,10 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15">
 
+            <Button Click="Click_SelectGraphicsCaptureV2">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
+            </Button>
+
             <Button Click="Click_SelectGraphicsCapture">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
             </Button>

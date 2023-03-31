@@ -15,7 +15,7 @@ using Windows.Storage.Streams;
 
 namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
 {
-    public sealed partial class WindowCaptureItemPage : Page
+    public sealed partial class WindowCaptureItemPage : Page, ICaptureItemPage
     {
         ObservableCollection<WindowInfo> WindowInfos { get; set; }
 
@@ -139,6 +139,11 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
             {
                 var wc = Window.Current;
             }
+        }
+
+        public void DoTest()
+        {
+            throw new NotImplementedException();
         }
     }
 }

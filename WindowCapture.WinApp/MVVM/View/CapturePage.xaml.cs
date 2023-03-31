@@ -40,6 +40,8 @@ using Windows.ApplicationModel.Core;
 using WindowCapture.WinApp.Dilogs.CaptureItemSelect;
 using Microsoft.UI.Windowing;
 using WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs;
+using Microsoft.UI.Xaml.Media.Animation;
+using System.Reflection;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -450,27 +452,6 @@ namespace WindowCapture.WinApp.MVVM.View
             brush.Stretch = CompositionStretch.Uniform;
             visual.Brush = brush;
             ElementCompositionPreview.SetElementChildVisual(gridToPreview, visual);
-        }
-
-        private async void Click_SelectGraphicsCaptureV2(object sender, RoutedEventArgs e)
-        {
-            var newWindow = new CapureItemSelectorWindow();
-
-            newWindow.Closed += (sender, e) =>
-            {
-
-            };
-
-            IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(newWindow);
-            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-            var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-
-            appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 500, Height = 450 });
-
-            OverlappedPresenter overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
-            overlappedPresenter.IsResizable = false;
-
-            newWindow.Activate();
         }
 
         private async void Click_SelectGraphicsCapture(object sender, RoutedEventArgs e)
@@ -995,6 +976,75 @@ namespace WindowCapture.WinApp.MVVM.View
         {
             await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalCacheFolder);
         }
+
+
+        #region inner nav
+
+        private Type TypeItemSelectPage { get; set; }
+
+        private async void Click_SelectGraphicsCaptureV2(object sender, RoutedEventArgs e)
+        {
+            ChangeInnerDIalogSate();
+            //var newWindow = new CapureItemSelectorWindow();
+
+            //newWindow.Closed += (sender, e) =>
+            //{
+
+            //};
+
+            //IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(newWindow);
+            //var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            //var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            //appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 500, Height = 450 });
+
+            //OverlappedPresenter overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
+            //overlappedPresenter.IsResizable = false;
+
+            //newWindow.Activate();
+        }
+
+        private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            var navItemTag = args.InvokedItemContainer.Tag.ToString();
+
+            Type _page = navItemTag switch
+            {
+                "MonitorContent" => typeof(MonitorCaptureItemPage),
+                "WindowContent" => typeof(WindowCaptureItemPage),
+                "MouseHookContent" => typeof(WindowCaptureItemPage),
+                _ => throw new NotImplementedException(),
+            };
+
+            TypeItemSelectPage = _page;
+            ContentFrame.Navigate(_page, null, new DrillInNavigationTransitionInfo());
+        }
+
+        private void SelectBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // ICaptureItemPage
+
+            MethodInfo methodInfo =  TypeItemSelectPage.GetMethod("DoTest");
+            var res = methodInfo.Invoke(null, null);
+
+            ChangeInnerDIalogSate();
+        }
+
+        private void CancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeInnerDIalogSate();
+        }
+
+        private void ChangeInnerDIalogSate()
+        {
+            if (ModalDialog.Visibility == Visibility.Collapsed)
+                ModalDialog.Visibility = Visibility.Visible;
+            else
+                ModalDialog.Visibility = Visibility.Collapsed;
+        }
+
+        #endregion inner nav
+
     }
 }
 

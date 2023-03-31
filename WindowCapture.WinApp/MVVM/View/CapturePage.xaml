@@ -77,6 +77,46 @@
 
         </Grid>
 
+        <Grid Grid.Row="3" x:Name="ModalDialog" Visibility="Collapsed" Canvas.ZIndex="10000" >
+            <NavigationView x:Name="rootNavigationView"
+                        PaneDisplayMode="Top"
+                        IsBackButtonVisible="Collapsed"
+                        IsSettingsVisible="False"
+                        ItemInvoked="NavView_ItemInvoked">
+
+                <NavigationView.MenuItems>
+                    <NavigationViewItem Content="Monitor" Tag="MonitorContent" />
+                    <NavigationViewItem Content="Window" Tag="WindowContent" />
+                    <NavigationViewItem Content="Mouse hook" Tag="MouseHookContent" />
+                </NavigationView.MenuItems>
+
+                <Grid Padding="15">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="50"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Frame x:Name="ContentFrame" Grid.Row="0">
+
+                        <Frame.ContentTransitions>
+                            <TransitionCollection>
+                                <NavigationThemeTransition  />
+                            </TransitionCollection>
+                        </Frame.ContentTransitions>
+
+                    </Frame>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="5" HorizontalAlignment="Right">
+                        <Button x:Name="SelectBtn" Content="Select" Click="SelectBtn_Click"/>
+                        <Button x:Name="CancelBtn" Content="Cancel" Click="CancelBtn_Click"/>
+                    </StackPanel>
+
+                </Grid>
+
+            </NavigationView>
+        </Grid>
+
     </Grid>
 
 </Page>

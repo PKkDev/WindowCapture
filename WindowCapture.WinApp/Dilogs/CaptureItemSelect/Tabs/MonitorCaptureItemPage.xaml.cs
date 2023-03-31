@@ -14,7 +14,7 @@ using Windows.Storage.Streams;
 
 namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
 {
-    public sealed partial class MonitorCaptureItemPage : Page
+    public sealed partial class MonitorCaptureItemPage : Page, ICaptureItemPage
     {
         ObservableCollection<MonitorInfo> MonitorInfos { get; set; }
 
@@ -91,6 +91,11 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
                 var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
                 var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
             }
+        }
+
+        public void DoTest()
+        {
+            throw new NotImplementedException();
         }
     }
 }

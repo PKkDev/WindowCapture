@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CaptureHelper;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -18,6 +19,8 @@ namespace WindowCapture.WinApp
     {
         public static Window MainWindow { get; set; }
         public IHost Host { get; }
+
+        public static CaptureItemSelected CaptureItemSelected { get; set; }
 
         private UIElement? _shell { get; set; }
 

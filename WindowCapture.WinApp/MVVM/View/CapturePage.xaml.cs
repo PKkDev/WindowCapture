@@ -42,6 +42,7 @@ using Microsoft.UI.Windowing;
 using WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs;
 using Microsoft.UI.Xaml.Media.Animation;
 using System.Reflection;
+using CaptureHelper;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -1028,10 +1029,18 @@ namespace WindowCapture.WinApp.MVVM.View
             //var res = methodInfo.Invoke(null, null);
 
             ChangeInnerDIalogSate();
+            if (App.CaptureItemSelected != null)
+            {
+                var item = App.CaptureItemSelected.Type == CaptureItemSelectedType.Monitor
+                    ? CaptureCreateHelper.CreateItemForMonitor(App.CaptureItemSelected.Handler)
+                    : CaptureCreateHelper.CreateItemForWindow(App.CaptureItemSelected.Handler);
+                StartCaptureInternal(item);
+            }
         }
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
+            App.CaptureItemSelected = null;
             ChangeInnerDIalogSate();
         }
 

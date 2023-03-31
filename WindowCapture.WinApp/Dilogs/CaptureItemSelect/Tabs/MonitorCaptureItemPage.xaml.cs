@@ -14,7 +14,7 @@ using Windows.Storage.Streams;
 
 namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
 {
-    public sealed partial class MonitorCaptureItemPage : Page, ICaptureItemPage
+    public sealed partial class MonitorCaptureItemPage : Page
     {
         ObservableCollection<MonitorInfo> MonitorInfos { get; set; }
 
@@ -87,12 +87,9 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
             var selected = MonitorsList.SelectedItem;
             if (selected is MonitorInfo wf)
             {
+                CaptureItemSelected cpis = new(CaptureItemSelectedType.Monitor, wf.Hmon);
+                App.CaptureItemSelected = cpis;
             }
-        }
-
-        public void DoTest()
-        {
-            throw new NotImplementedException();
         }
     }
 }

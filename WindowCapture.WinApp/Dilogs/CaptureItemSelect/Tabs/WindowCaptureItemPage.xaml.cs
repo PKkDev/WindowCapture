@@ -15,7 +15,7 @@ using Windows.Storage.Streams;
 
 namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
 {
-    public sealed partial class WindowCaptureItemPage : Page, ICaptureItemPage
+    public sealed partial class WindowCaptureItemPage : Page
     {
         ObservableCollection<WindowInfo> WindowInfos { get; set; }
 
@@ -137,12 +137,9 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
             var selected = WindowsList.SelectedItem;
             if (selected is WindowInfo wf)
             {
+                CaptureItemSelected cpis = new(CaptureItemSelectedType.Process, wf.HWND);
+                App.CaptureItemSelected = cpis;
             }
-        }
-
-        public void DoTest()
-        {
-            throw new NotImplementedException();
         }
     }
 }

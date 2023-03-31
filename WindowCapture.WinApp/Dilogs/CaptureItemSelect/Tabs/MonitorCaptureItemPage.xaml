@@ -14,7 +14,7 @@
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Frame Width="180" Height="180" Padding="5">
+                        <Frame Width="300" Height="180" Padding="5">
                             <Grid>
 
                                 <Grid.RowDefinitions>
@@ -22,9 +22,9 @@
                                     <RowDefinition></RowDefinition>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{Binding DeviceName}" TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding DeviceName}" TextWrapping="Wrap"/>
 
-                                <Image Grid.Row="1" Width="180" Height="155" Stretch="Uniform" Source="{Binding PreviewSource, Mode=OneWay}"/>
+                                <Image Grid.Row="1" Width="300" Height="155" Stretch="Uniform" Source="{Binding PreviewSource, Mode=OneWay}"/>
 
                             </Grid>
                         </Frame>

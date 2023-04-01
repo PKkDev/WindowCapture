@@ -18,14 +18,8 @@ namespace WindowCapture.WinApp.Helpers
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            //if (parameter is string time)
-            //{
-            //    return 0;
-            //}
-
             throw new ArgumentException($"Exception {nameof(TimeSecondsToStringConverter)} ParameterMustBeAnEnumName");
         }
-
 
     }
 

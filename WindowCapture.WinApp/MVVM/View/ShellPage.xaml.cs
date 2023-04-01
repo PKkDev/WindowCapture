@@ -13,7 +13,7 @@ namespace WindowCapture.WinApp.MVVM.View
             DataContext = ViewModel = App.GetService<ShellViewModel>();
 
             ViewModel.NavigationHelperService.Initialize(NavView, ContentFrame);
-            ViewModel.NavigationHelperService.Navigate("PictureDetect");
+            ViewModel.NavigationHelperService.Navigate("Capture");
         }
     }
 }

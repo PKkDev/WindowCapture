@@ -759,7 +759,10 @@ namespace WindowCapture.WinApp.MVVM.View
         private void ChangeInnerDIalogSate()
         {
             if (ModalDialog.Visibility == Visibility.Collapsed)
+            {
                 ModalDialog.Visibility = Visibility.Visible;
+                ContentFrame.Navigate(typeof(WindowCaptureItemPage), null, new DrillInNavigationTransitionInfo());
+            }
             else
                 ModalDialog.Visibility = Visibility.Collapsed;
         }

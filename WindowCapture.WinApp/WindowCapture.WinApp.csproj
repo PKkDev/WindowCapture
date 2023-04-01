@@ -18,6 +18,9 @@
 
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Assets\AppIcon\StoreLogo.scale-100.png" />
+    <Content Remove="Assets\AppIcon\StoreLogo.scale-200.png" />
+    <Content Remove="Assets\AppIcon\StoreLogo.scale-400.png" />
     <Content Remove="Assets\Icons\dat.png" />
     <Content Remove="Assets\Icons\mp3.png" />
     <Content Remove="Assets\Icons\mp4.png" />

@@ -33,7 +33,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="WindowCapture.WinApp"
+        DisplayName="WindowCapture"
         Description="WindowCapture.WinApp"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\AppIcon\Square150x150Logo.png"

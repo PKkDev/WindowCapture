@@ -3,7 +3,7 @@ using System;
 using System.Numerics;
 using Windows.Foundation;
 
-namespace CaptureHelper
+namespace CaptureHelper.Model
 {
     public class MonitorInfo
     {

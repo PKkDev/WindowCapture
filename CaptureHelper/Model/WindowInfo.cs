@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using Windows.Graphics.Imaging;
 
-namespace CaptureHelper
+namespace CaptureHelper.Model
 {
     public class WindowInfo
     {

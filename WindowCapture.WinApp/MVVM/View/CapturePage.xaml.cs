@@ -30,19 +30,12 @@ using NAudio.Wave;
 using Microsoft.AspNetCore.SignalR.Client;
 using NAudio.CoreAudioApi;
 using WindowCapture.WinApp.Helpers;
-using Windows.Media.Audio;
-using System.Linq;
 using Windows.Media.Capture;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using Windows.Foundation.Metadata;
-using Windows.ApplicationModel.Core;
-using WindowCapture.WinApp.Dilogs.CaptureItemSelect;
-using Microsoft.UI.Windowing;
 using WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs;
 using Microsoft.UI.Xaml.Media.Animation;
-using System.Reflection;
 using CaptureHelper;
+using CaptureHelper.Model;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -149,210 +142,13 @@ namespace WindowCapture.WinApp.MVVM.View
         {
             InitializeComponent();
 
-            //Task t1 = Task.Run(async () =>
-            //{
-            //    try
-            //    {
-            //        MMDevice defaultLoopbackCaptureDevice = WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice();
-            //        MMDevice defaultCaptureDevice = WasapiLoopbackCapture.GetDefaultCaptureDevice();
-
-            //        var l = new MMDeviceEnumerator();
-            //        var lll1 = l.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.All);
-            //        MMDevice? lll1Activ = lll1.FirstOrDefault(x => x.FriendlyName.Equals("Динамики (H310-1)"));
-            //        MMDevice? lll1Activ1 = lll1.FirstOrDefault(x => x.FriendlyName.Equals("Громкоговорители / головные телефоны (IDT High Definition Audio CODEC)"));
-            //        var lll2 = l.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.All);
-            //        MMDevice? lll2Activ = lll2.FirstOrDefault(x => x.FriendlyName.Equals("Микрофон (H310-1)"));
-
-
-            //        var gg = defaultLoopbackCaptureDevice.AudioEndpointVolume.VolumeRange;
-            //        var ss1 = defaultLoopbackCaptureDevice.AudioEndpointVolume.StepInformation;
-            //        var ss2 = defaultLoopbackCaptureDevice.AudioEndpointVolume.MasterVolumeLevel;
-
-            //        defaultLoopbackCaptureDevice.AudioEndpointVolume.VolumeStepUp();
-
-            //        var ss11 = defaultLoopbackCaptureDevice.AudioEndpointVolume.StepInformation;
-            //        var ss22 = defaultLoopbackCaptureDevice.AudioEndpointVolume.MasterVolumeLevel;
-
-            //        defaultLoopbackCaptureDevice.AudioEndpointVolume.VolumeStepUp();
-            //        defaultLoopbackCaptureDevice.AudioEndpointVolume.VolumeStepUp();
-            //        defaultLoopbackCaptureDevice.AudioEndpointVolume.VolumeStepUp();
-
-            //        var ss111 = defaultLoopbackCaptureDevice.AudioEndpointVolume.StepInformation;
-            //        var ss2222 = defaultLoopbackCaptureDevice.AudioEndpointVolume.MasterVolumeLevel;
-
-            //        PCAudioCapture = new WasapiLoopbackCapture(defaultLoopbackCaptureDevice);
-            //        filePCAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"pc.mp3", CreationCollisionOption.ReplaceExisting);
-            //        PCAudioWriter = new WaveFileWriter(filePCAudio.Path, PCAudioCapture.WaveFormat);
-
-            //        PCAudioCapture.DataAvailable += (s, a) =>
-            //        {
-            //            PCAudioWriter.Write(a.Buffer, 0, a.BytesRecorded);
-
-            //            App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-            //            {
-            //                PCAudioRecordedSeconds = PCAudioWriter.Position / PCAudioCapture.WaveFormat.AverageBytesPerSecond;
-            //                PCRecordedSecondsStr.Text = $"pc: {TimeSpan.FromSeconds(PCAudioRecordedSeconds).ConvertToStr()}";
-            //            });
-
-            //        };
-
-            //        PCAudioCapture.RecordingStopped += (s, a) =>
-            //        {
-            //            PCAudioWriter?.Dispose();
-            //            PCAudioWriter = null;
-            //            PCAudioCapture?.Dispose();
-            //            PCAudioCapture = null;
-            //        };
-
-            //        var silence = new SilenceProvider(new WaveFormat(44100, 2)).ToSampleProvider();
-            //        SilenceWaveOut = new WaveOutEvent();
-            //        SilenceWaveOut.Init(silence);
-            //        SilenceWaveOut.PlaybackStopped += (s, a) =>
-            //        {
-            //            SilenceWaveOut?.Dispose();
-            //            SilenceWaveOut = null;
-            //        };
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //    }
-            //});
-            //t1.Wait();
-
-            //Task t2 = Task.Run(async () =>
-            // {
-            //     try
-            //     {
-            //         //fileMicroAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"micro.mp3", CreationCollisionOption.GenerateUniqueName);
-
-            //         //string a = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default);
-            //         //DeviceInformation a1 = await DeviceInformation.CreateFromIdAsync(a);
-
-            //         //string defaultAudioCaptureId = MediaDevice.GetDefaultAudioCaptureId(AudioDeviceRole.Communications);
-            //         //DeviceInformation defaultAudioCapture = await DeviceInformation.CreateFromIdAsync(defaultAudioCaptureId);
-
-            //         //string audioCaptureSelector = MediaDevice.GetAudioCaptureSelector();
-            //         //var audioCapture = await DeviceInformation.FindAllAsync(audioCaptureSelector);
-
-            //         //AudioGraphSettings settings = new AudioGraphSettings(Windows.Media.Render.AudioRenderCategory.Media);
-            //         //settings.PrimaryRenderDevice = a1;
-            //         //CreateAudioGraphResult result = await AudioGraph.CreateAsync(settings);
-            //         //if (result.Status != AudioGraphCreationStatus.Success)
-            //         //{
-            //         //}
-            //         //audioGraph = result.Graph;
-
-            //         //audioGraph.QuantumProcessed += (AudioGraph a, object b) =>
-            //         //{
-            //         //    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-            //         //    {
-            //         //        MicroAudioRecordedSeconds = a.CompletedQuantumCount * 10;
-            //         //        MicroRecordedSecondsStr.Text = $"micro: {TimeSpan.FromMilliseconds(a.CompletedQuantumCount * 10).ConvertToStr()}";
-            //         //    });
-            //         //};
-
-            //         //audioGraph.QuantumStarted += (AudioGraph a, object b) =>
-            //         //{
-            //         //};
-
-            //         //audioGraph.UnrecoverableErrorOccurred += (a, b) => { };
-
-
-            //         //// Create a device output node
-            //         //CreateAudioDeviceInputNodeResult result1 = await audioGraph.CreateDeviceInputNodeAsync(
-            //         //    Windows.Media.Capture.MediaCategory.Media, audioGraph.EncodingProperties, defaultAudioCapture);
-            //         //if (result1.Status != AudioDeviceNodeCreationStatus.Success)
-            //         //{
-            //         //}
-            //         //deviceInputNode = result1.DeviceInputNode;
-
-            //         //////  Create a device output node
-            //         ////CreateAudioDeviceOutputNodeResult deviceOutputNodeResult = await audioGraph.CreateDeviceOutputNodeAsync();
-            //         ////if (deviceOutputNodeResult.Status != AudioDeviceNodeCreationStatus.Success)
-            //         ////{
-            //         ////    return;
-            //         ////}
-            //         ////deviceOutputNode = deviceOutputNodeResult.DeviceOutputNode;
-
-
-            //         //// Operate node at the graph format, but save file at the specified format
-            //         //var mediaEncodingProfile = MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High);
-            //         //CreateAudioFileOutputNodeResult result2 = await audioGraph.CreateFileOutputNodeAsync(fileMicroAudio, mediaEncodingProfile);
-            //         //if (result2.Status != AudioFileNodeCreationStatus.Success)
-            //         //{
-            //         //}
-            //         //fileOutputNode = result2.FileOutputNode;
-
-            //         //deviceInputNode.AddOutgoingConnection(fileOutputNode);
-            //         ////deviceInputNode.AddOutgoingConnection(deviceOutputNode);
-            //     }
-            //     catch (Exception ex)
-            //     {
-
-            //     }
-            // });
-            //t2.Wait();
-
-            //Task t3 = Task.Run(async () =>
-            //{
-            //    //MMDevice h = WasapiLoopbackCapture.GetDefaultCaptureDevice();
-
-            //    //PCAudioCapture = new WasapiLoopbackCapture(h);
-            //    //filePCAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"test.mp3", CreationCollisionOption.ReplaceExisting);
-            //    //PCAudioWriter = new WaveFileWriter(filePCAudio.Path, PCAudioCapture.WaveFormat);
-
-            //    //PCAudioCapture.DataAvailable += (s, a) =>
-            //    //{
-            //    //    PCAudioWriter.Write(a.Buffer, 0, a.BytesRecorded);
-
-            //    //    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-            //    //    {
-            //    //        PCAudioRecordedSeconds = PCAudioWriter.Position / PCAudioCapture.WaveFormat.AverageBytesPerSecond;
-            //    //        RecordedSecondsStr.Text = TimeSpan.FromSeconds(PCAudioRecordedSeconds).ConvertToStr();
-            //    //    });
-
-            //    //};
-
-            //    //PCAudioCapture.RecordingStopped += (s, a) =>
-            //    //{
-            //    //    PCAudioWriter?.Dispose();
-            //    //    PCAudioWriter = null;
-            //    //    PCAudioCapture?.Dispose();
-            //    //    PCAudioCapture = null;
-            //    //};
-
-            //    //var silence = new SilenceProvider(new WaveFormat(44100, 2)).ToSampleProvider();
-            //    //SilenceWaveOut = new WaveOutEvent();
-            //    //SilenceWaveOut.Init(silence);
-            //    //SilenceWaveOut.PlaybackStopped += (s, a) =>
-            //    //{
-            //    //    SilenceWaveOut?.Dispose();
-            //    //    SilenceWaveOut = null;
-            //    //};
-            //});
-            //t3.Wait();
-
-
-            //SilenceWaveOut.Play();
-            //PCAudioCapture.StartRecording();
-
-            //Task t4 = Task.Run(async () =>
-            //{
-            //    await Task.Delay(TimeSpan.FromSeconds(18));
-
-            //    //audioGraph.Stop();
-            //    //audioGraph?.Dispose();
-            //    //audioGraph = null;
-            //    //deviceInputNode = null;
-            //    //fileOutputNode = null;
-
-            //    PCAudioCapture.StopRecording();
-            //    SilenceWaveOut.Stop();
-            //});
-
             Setup();
-            SetupSignlR();
+            //SetupSignlR();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
         }
 
         private void SetupSignlR()
@@ -436,9 +232,8 @@ namespace WindowCapture.WinApp.MVVM.View
 
             _compositor = App.MainWindow.Compositor;
 
-            _compositionGraphicsDevice = CanvasComposition.CreateCompositionGraphicsDevice(
-                _compositor,
-                _canvasDevice);
+            _compositionGraphicsDevice = CanvasComposition
+                .CreateCompositionGraphicsDevice(_compositor, _canvasDevice);
 
             _surface = _compositionGraphicsDevice.CreateDrawingSurface(
                 new Size(400, 400),
@@ -457,65 +252,17 @@ namespace WindowCapture.WinApp.MVVM.View
 
         private async void Click_SelectGraphicsCapture(object sender, RoutedEventArgs e)
         {
-
-            #region TEST
-
-            //ObservableCollection<Process> processes = new();
-
-            //if (ApiInformation.IsApiContractPresent(typeof(Windows.Foundation.UniversalApiContract).FullName, 8))
-            //{
-            //    var processesWithWindows = from p in Process.GetProcesses()
-            //                               where !string.IsNullOrWhiteSpace(p.MainWindowTitle) && WindowEnumerationHelper.IsWindowValidForCapture(p.MainWindowHandle)
-            //                               select p;
-            //    processes = new ObservableCollection<Process>(processesWithWindows);
-            //}
-
-            //var process = processes
-            //    .FirstOrDefault(x => x.MainWindowTitle.Equals("Диспетчер задач"));
-            //var processHWND = process.MainWindowHandle;
-
-            //GraphicsCaptureItem captureItem = CaptureHelper.CreateItemForWindow(processHWND);
-
-            #endregion TEST
-
-            //DevicePicker devicePicker = new();
-            //devicePicker.Filter.SupportedDeviceClasses.Add(DeviceClass.All);
-            //var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
-            //WinRT.Interop.InitializeWithWindow.Initialize(devicePicker, hwnd);
-            //Windows.Foundation.Rect rect = new Windows.Foundation.Rect(new Windows.Foundation.Point(0, 0), new Windows.Foundation.Point(0, 0));
-            //DeviceInformation di = await devicePicker.PickSingleDeviceAsync(rect);
-            //if (di != null) { }
-
-
-            //CoreApplicationView newView = CoreApplication.CreateNewView();
-
-            //App.MainWindow.DispatcherQueue.TryEnqueue(async () =>
-            //{
-            //    UIElement? _shell = App.GetService<ShellPage>();
-
-            //    Windows.UI.WindowManagement.AppWindow appWindow = await Windows.UI.WindowManagement.AppWindow.TryCreateAsync();
-            //    //Windows.UI.Xaml.Hosting.ElementCompositionPreview.SetAppWindowContent(appWindow, _shell);
-            //    await appWindow.TryShowAsync();
-            //});
-
-
-
-
-
             GraphicsCapturePicker picker = new();
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
             WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
             GraphicsCaptureItem captureItem = await picker.PickSingleItemAsync();
 
             if (captureItem != null)
-            {
                 StartCaptureInternal(captureItem);
-            }
         }
 
         private async void StartCaptureInternal(GraphicsCaptureItem item)
         {
-            // Stop the previous capture if we had one.
             StopCapture();
 
             _captureItem = item;
@@ -828,29 +575,8 @@ namespace WindowCapture.WinApp.MVVM.View
         {
             try
             {
-                //if (_isRecording)
-                //{
-                //    while (frames.Count == 0) { }
-                //    lock (frames)
-                //    {
-                //        var videoFrame = frames.Dequeue();
-                //        var samp = MediaStreamSample.CreateFromDirect3D11Surface(videoFrame.Surface, videoFrame.SystemRelativeTime);
-                //        args.Request.Sample = samp;
-                //    }
-                //}
-                //else
-                //{
-                //    args.Request.Sample = null;
-                //    StopCapture();
-                //}
-
-
                 while (framesToSave.Count == 0) { }
-                //if (frames.Count == 0)
-                //{
-                //    Thread.Sleep(TimeSpan.FromMilliseconds(50));
-                //    StreamSource_SampleRequested(sender, args);
-                //}
+
                 SurfaceWithInfo videoFrame = framesToSave.Dequeue();
 
                 if (videoFrame == null)
@@ -868,7 +594,7 @@ namespace WindowCapture.WinApp.MVVM.View
                         VideoRecordedSeconds = time.TotalSeconds;
                         VideoRecordedSecondsStr.Text = $"video: {time.ConvertToStr()}";
                     }
-                    catch (Exception e) { }
+                    catch (Exception ex) { }
                 });
 
                 var samp = MediaStreamSample.CreateFromDirect3D11Surface(videoFrame.Surface, videoFrame.SystemRelativeTime);
@@ -974,24 +700,16 @@ namespace WindowCapture.WinApp.MVVM.View
         }
 
         private async void OpenCacheClick(object sender, RoutedEventArgs e)
-        {
-            await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalCacheFolder);
-        }
-
+            => await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalCacheFolder);
 
         #region inner nav
-
-        private Type TypeItemSelectPage { get; set; }
 
         private async void Click_SelectGraphicsCaptureV2(object sender, RoutedEventArgs e)
         {
             ChangeInnerDIalogSate();
             //var newWindow = new CapureItemSelectorWindow();
 
-            //newWindow.Closed += (sender, e) =>
-            //{
-
-            //};
+            //newWindow.Closed += (sender, e) => { };
 
             //IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(newWindow);
             //var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
@@ -1017,17 +735,11 @@ namespace WindowCapture.WinApp.MVVM.View
                 _ => throw new NotImplementedException(),
             };
 
-            TypeItemSelectPage = _page;
             ContentFrame.Navigate(_page, null, new DrillInNavigationTransitionInfo());
         }
 
         private void SelectBtn_Click(object sender, RoutedEventArgs e)
         {
-            // ICaptureItemPage
-
-            //MethodInfo methodInfo =  TypeItemSelectPage.GetMethod("DoTest");
-            //var res = methodInfo.Invoke(null, null);
-
             ChangeInnerDIalogSate();
             if (App.CaptureItemSelected != null)
             {

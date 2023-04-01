@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CaptureHelper
+namespace CaptureHelper.Model
 {
     public class CaptureItemSelected
     {

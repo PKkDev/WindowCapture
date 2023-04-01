@@ -1,4 +1,4 @@
-﻿using CaptureHelper;
+﻿using CaptureHelper.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Windowing;
@@ -84,7 +84,7 @@ namespace WindowCapture.WinApp
             //var w = new CapureItemSelectorWindow();
             //w.Activate();
 
-            //SetWindowSize(w);
+            SetWindowSize(MainWindow);
         }
 
         private void SetWindowSize(Window mainWindow)
@@ -93,7 +93,7 @@ namespace WindowCapture.WinApp
             var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
             var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
 
-            appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 500, Height = 450 });
+            appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 600, Height = 750 });
 
             OverlappedPresenter overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
             overlappedPresenter.IsResizable = false;

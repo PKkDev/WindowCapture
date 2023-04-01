@@ -11,6 +11,7 @@
         <NavigationView
             x:Name="NavView"
             IsBackButtonVisible="Collapsed"
+            PaneDisplayMode="LeftCompact"
             IsSettingsVisible="true">
 
             <NavigationView.MenuItems>

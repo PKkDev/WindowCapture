@@ -89,9 +89,14 @@ namespace CaptureHelper
         [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
         static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
 
-        // This static method is required because Win32 does not support
-        // GetWindowLongPtr directly.
-        // http://pinvoke.net/default.aspx/user32/GetWindowLong.html
+        /// <summary>
+        /// This static method is required because Win32 does not support
+        /// GetWindowLongPtr directly.
+        /// http://pinvoke.net/default.aspx/user32/GetWindowLong.html
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <param name="nIndex"></param>
+        /// <returns></returns>
         static IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex)
         {
             if (IntPtr.Size == 8)

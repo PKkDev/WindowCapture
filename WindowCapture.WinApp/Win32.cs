@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Runtime.InteropServices;
-using Windows.Graphics.Capture;
-using System.Collections.Generic;
-using Windows.Foundation;
-using System.Numerics;
 
 namespace WindowCapture.WinApp
 {

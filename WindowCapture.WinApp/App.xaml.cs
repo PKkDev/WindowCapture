@@ -1,14 +1,15 @@
 ﻿using CaptureHelper.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using WindowCapture.WinApp.Dilogs.CaptureItemSelect;
 using WindowCapture.WinApp.MVVM.View;
 using WindowCapture.WinApp.MVVM.ViewModel;
 using WindowCapture.WinApp.Service;
+using Windows.Foundation.Collections;
 
 namespace WindowCapture.WinApp
 {
@@ -40,6 +41,10 @@ namespace WindowCapture.WinApp
         {
             InitializeComponent();
 
+            AppDomain.CurrentDomain.ProcessExit += (object sender, EventArgs e) =>
+            {
+            };
+
             Host = Microsoft.Extensions.Hosting.Host.
             CreateDefaultBuilder().
             UseContentRoot(AppContext.BaseDirectory).
@@ -61,6 +66,23 @@ namespace WindowCapture.WinApp
             .Build();
 
             UnhandledException += App_UnhandledException;
+
+
+            ToastNotificationManagerCompat.OnActivated += (ToastNotificationActivatedEventArgsCompat toastArgs) =>
+            {
+                // Obtain the arguments from the notification
+                ToastArguments args = ToastArguments.Parse(toastArgs.Argument);
+
+                // Obtain any user input (text boxes, menu selections) from the notification
+                ValueSet userInput = toastArgs.UserInput;
+
+                // Need to dispatch to UI thread if performing UI operations
+                MainWindow.DispatcherQueue.TryEnqueue(delegate
+                {
+                    // TODO: Show the corresponding content
+                    //MessageBox.Show("Toast activated. Args: " + toastArgs.Argument);
+                });
+            };
         }
 
         private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)

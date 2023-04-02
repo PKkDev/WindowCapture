@@ -6,7 +6,9 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:uap6="http://schemas.microsoft.com/appx/manifest/uap/windows10/6"
   xmlns:uap11="http://schemas.microsoft.com/appx/manifest/uap/windows10/11"
-  IgnorableNamespaces="uap rescap uap6 uap11">
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  IgnorableNamespaces="uap rescap uap6 uap11 com desktop">
 
   <Identity
     Name="e3ce9e70-4227-4950-abfe-78557804a917"
@@ -29,9 +31,29 @@
   </Resources>
 
   <Applications>
+
     <Application Id="App"
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
+
+      <Extensions>
+
+        <!--Specify which CLSID to activate when toast clicked-->
+        <desktop:Extension Category="windows.toastNotificationActivation">
+          <desktop:ToastNotificationActivation ToastActivatorCLSID="6877F64F-3DA9-4A24-A409-F6FA8A7B2A57" />
+        </desktop:Extension>
+
+        <!--Register COM CLSID LocalServer32 registry key-->
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="WindowCapture.WinApp.exe" Arguments="-ToastActivated" DisplayName="Toast activator">
+              <com:Class Id="6877F64F-3DA9-4A24-A409-F6FA8A7B2A57" DisplayName="Toast activator"/>
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+
+      </Extensions>
+
       <uap:VisualElements
         DisplayName="WindowCapture"
         Description="WindowCapture.WinApp"
@@ -41,7 +63,9 @@
         <uap:DefaultTile Wide310x150Logo="Assets\AppIcon\Wide310x150Logo.png"  Square71x71Logo="Assets\AppIcon\SmallTile.png" Square310x310Logo="Assets\AppIcon\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\AppIcon\SplashScreen.png" />
       </uap:VisualElements>
+
     </Application>
+
   </Applications>
 
   <Capabilities>

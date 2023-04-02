@@ -7,7 +7,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using WindowCapture.WinApp.MVVM.Model;
+using Windows.Media.Capture;
+using Windows.Media.Core;
+using Windows.Media.Editing;
+using Windows.Media.Playback;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
 using Windows.System;
 
@@ -97,9 +102,26 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
             IsFolderScaning = false;
         }
 
-        public void ViewFilesClick(MediaFileDetail fileDetail)
+        public async void ViewFilesClick(MediaFileDetail fileDetail)
         {
             SelectedMediaFileDetail = fileDetail;
+
+            MediaClip videoTrack = await MediaClip.CreateFromFileAsync(SelectedMediaFileDetail.File);
+            var s = MediaSource.CreateFromStorageFile(SelectedMediaFileDetail.File);
+
+            var mediaPlayer = new MediaPlayer();
+            mediaPlayer.Source = MediaSource.CreateFromStorageFile(SelectedMediaFileDetail.File);
+
+            var mediaCapture = new MediaCapture();
+            var mediaCaptureSettings = new MediaCaptureInitializationSettings
+            {
+                //VideoSource = s.So,
+                SharingMode = MediaCaptureSharingMode.SharedReadOnly,
+                StreamingCaptureMode = StreamingCaptureMode.Audio,
+                MemoryPreference = MediaCaptureMemoryPreference.Cpu
+            };
+            await mediaCapture.InitializeAsync(mediaCaptureSettings);
+
             System.Diagnostics.Process.Start("CMD.exe", $"/C {fileDetail.File.Path}");
         }
     }

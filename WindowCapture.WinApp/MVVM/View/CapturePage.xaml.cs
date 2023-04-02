@@ -36,6 +36,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using CaptureHelper;
 using CaptureHelper.Model;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -677,6 +678,11 @@ namespace WindowCapture.WinApp.MVVM.View
                 muxedStream.Clips.Add(videoTrack);
 
                 var r = await muxedStream.RenderToFileAsync(fileUnion, MediaTrimmingPreference.Precise);
+
+
+                new ToastContentBuilder()
+                    .AddText("rendered file is ready")
+                    .Show();
 
                 //MediaStreamSource mss = muxedStream.GenerateMediaStreamSource();
                 //mpElement.Source = MediaSource.CreateFromMediaStreamSource(mss);

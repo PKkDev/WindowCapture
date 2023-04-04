@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using NReco.VideoConverter;
 using System;
 using System.Collections.Generic;
@@ -102,7 +104,13 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
             foreach (var file in files)
                 if (_acceptedExtenson.Contains(file.FileType))
-                    ViewFiles.Add(new(file, DeleteCommand, OpenCommand));
+                {
+                    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+                    {
+                        ImageSource icon = new BitmapImage(new Uri("ms-appx:///Assets/Icons/mp4.png"));
+                        ViewFiles.Add(new(file, icon, DeleteCommand, OpenCommand));
+                    });
+                }
 
             IsFolderScaning = false;
         }

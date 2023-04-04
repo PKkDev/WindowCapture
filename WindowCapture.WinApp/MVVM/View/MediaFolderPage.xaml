@@ -58,7 +58,7 @@
                                 <ColumnDefinition></ColumnDefinition>
                             </Grid.ColumnDefinitions>
 
-                            <Image Grid.Column="0" Source="{Binding LogoPath}" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <Image Grid.Column="0" Source="{Binding Icon}" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
                             <TextBlock Grid.Column="1" Text="{Binding DisplayName}" VerticalAlignment="Center"/>
 

@@ -1,11 +1,14 @@
-﻿using System.Windows.Input;
+﻿using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+using System;
+using System.Windows.Input;
 using Windows.Storage;
 
 namespace WindowCapture.WinApp.MVVM.Model
 {
     public class MediaFileDetail
     {
-        public string LogoPath { get; set; }
+        public ImageSource Icon { get; set; }
 
         public StorageFile File { get; set; }
 
@@ -18,7 +21,7 @@ namespace WindowCapture.WinApp.MVVM.Model
         public ICommand DeleteCommand { get; set; }
         public ICommand OpenCommand { get; set; }
 
-        public MediaFileDetail(StorageFile file, ICommand deleteCommand, ICommand openCommand)
+        public MediaFileDetail(StorageFile file, ImageSource icon, ICommand deleteCommand, ICommand openCommand)
         {
             DeleteCommand = deleteCommand;
             OpenCommand = openCommand;
@@ -27,7 +30,8 @@ namespace WindowCapture.WinApp.MVVM.Model
             DisplayName = file.DisplayName;
             DateCreated = file.DateCreated.ToString("dd.MM.yyyy HH:mm");
             FileType = file.FileType.Trim('.');
-            LogoPath = GetLogoPath(FileType);
+
+            Icon = icon;
         }
 
         private string GetLogoPath(string fileType)

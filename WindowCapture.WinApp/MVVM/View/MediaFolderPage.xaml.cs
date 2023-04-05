@@ -12,6 +12,7 @@ namespace WindowCapture.WinApp.MVVM.View
         {
             InitializeComponent();
             DataContext = ViewModel = App.GetService<MediaFolderViewModel>();
+            ViewModel.SetDetailFrame(detailFrame);
         }
 
         private void ViewFilesItemClick(object sender, ItemClickEventArgs e)

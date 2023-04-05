@@ -10,7 +10,8 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15">
@@ -62,6 +63,21 @@
             </ListView.ItemTemplate>
 
         </ListView>
+
+        <Frame Grid.Row="2" x:Name="detailFrame"/>
+
+        <!--<Grid Grid.Row="2">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="sadasd"></TextBlock>
+
+            <TextBlock Grid.Column="1" Text="sadasd"></TextBlock>
+
+        </Grid>-->
 
     </Grid>
 

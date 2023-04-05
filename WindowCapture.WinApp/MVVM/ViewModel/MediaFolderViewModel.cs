@@ -1,11 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs;
 using WindowCapture.WinApp.Extensios;
 using WindowCapture.WinApp.MVVM.Model;
 using Windows.Storage;
@@ -40,6 +43,12 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
         public StandardUICommand DeleteCommand { get; set; }
         public StandardUICommand OpenCommand { get; set; }
+
+        private Frame _detailFrame;
+        public void SetDetailFrame(Frame detailFrame)
+        {
+            _detailFrame = detailFrame;
+        }
 
         public MediaFolderViewModel()
         {
@@ -107,6 +116,20 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
         public async void ViewFilesClick(MediaFileDetail fileDetail)
         {
             SelectedMediaFileDetail = fileDetail;
+
+            switch (fileDetail.FileType)
+            {
+                case "mp3":
+                    {
+                        _detailFrame.Navigate(typeof(WindowCaptureItemPage), null, new DrillInNavigationTransitionInfo());
+                        break;
+                    }
+                case "mp4":
+                    {
+                        _detailFrame.Navigate(typeof(WindowCaptureItemPage), null, new DrillInNavigationTransitionInfo());
+                        break;
+                    }
+            }
 
             //using MemoryStream ras = new MemoryStream();
             //var ffMpeg = new NReco.VideoConverter.FFMpegConverter();

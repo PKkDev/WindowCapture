@@ -56,8 +56,8 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
                     previewSB.CopyFromBuffer(buffer);
 
                     SoftwareBitmapSource previewSBS = new();
-                    if (previewSB.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || previewSB.BitmapAlphaMode != BitmapAlphaMode.Ignore)
-                        previewSB = SoftwareBitmap.Convert(previewSB, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
+                    if (previewSB.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || previewSB.BitmapAlphaMode != BitmapAlphaMode.Premultiplied)
+                        previewSB = SoftwareBitmap.Convert(previewSB, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
                     await previewSBS.SetBitmapAsync(previewSB);
                     monitor.PreviewSource = previewSBS;
 

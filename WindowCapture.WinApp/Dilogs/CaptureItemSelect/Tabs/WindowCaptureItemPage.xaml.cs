@@ -66,8 +66,8 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs
                         //VideoFrame inputImage = VideoFrame.CreateWithSoftwareBitmap(softwareBitmap);
 
                         SoftwareBitmapSource sbs = new();
-                        if (softwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || softwareBitmap.BitmapAlphaMode != BitmapAlphaMode.Ignore)
-                            softwareBitmap = SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
+                        if (softwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || softwareBitmap.BitmapAlphaMode != BitmapAlphaMode.Premultiplied)
+                            softwareBitmap = SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
                         await sbs.SetBitmapAsync(softwareBitmap);
                         newInfo.IconSource = sbs;
 

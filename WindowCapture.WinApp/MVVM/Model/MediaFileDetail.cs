@@ -1,6 +1,4 @@
 ﻿using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System;
 using System.Windows.Input;
 using Windows.Storage;
 
@@ -32,16 +30,6 @@ namespace WindowCapture.WinApp.MVVM.Model
             FileType = file.FileType.Trim('.');
 
             Icon = icon;
-        }
-
-        private string GetLogoPath(string fileType)
-        {
-            return fileType switch
-            {
-                "mp4" => "/Assets/Icons/mp4.png",
-                "mp3" => "/Assets/Icons/mp3.png",
-                _ => "/Assets/Icons/dat.png",
-            };
         }
     }
 }

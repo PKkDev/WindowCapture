@@ -10,6 +10,25 @@
 
     <Grid>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="190"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Image x:Name="filePreview" Grid.Column="0" Margin="5" Stretch="Fill"></Image>
+
+        <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="10">
+
+            <TextBlock Text="{x:Bind FileDetail.DisplayName}" VerticalAlignment="Center"/>
+
+            <TextBlock Text="{x:Bind FileDetail.DateCreated}" VerticalAlignment="Center"/>
+
+            <TextBlock Text="{x:Bind FileDetail.File.DisplayType}" VerticalAlignment="Center"/>
+
+            <TextBlock Text="{x:Bind VideoProps.Duration, Mode=OneWay}" VerticalAlignment="Center"/>
+
+        </StackPanel>
+
     </Grid>
 
 </Page>

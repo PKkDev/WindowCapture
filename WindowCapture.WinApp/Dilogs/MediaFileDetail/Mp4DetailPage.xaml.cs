@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using System;
 using System.Drawing;
 using System.IO;
 using Windows.Graphics.Imaging;
@@ -8,12 +9,24 @@ using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using CaptureHelper.Extensions;
 using System.Threading.Tasks;
+using Windows.Storage.FileProperties;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace WindowCapture.WinApp.Dilogs.MediaFileDetail
 {
-    public sealed partial class Mp4DetailPage : Page
+    public sealed partial class Mp4DetailPage : Page, INotifyPropertyChanged
     {
-        private MVVM.Model.MediaFileDetail _fileDetail { get; set; }
+        public MVVM.Model.MediaFileDetail FileDetail { get; set; }
+
+        public VideoProperties VideoProps { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
 
         public Mp4DetailPage()
         {
@@ -24,7 +37,7 @@ namespace WindowCapture.WinApp.Dilogs.MediaFileDetail
         {
             if (e.Parameter is MVVM.Model.MediaFileDetail fileDetail)
             {
-                _fileDetail = fileDetail;
+                FileDetail = fileDetail;
                 await LoadDetail();
             }
             base.OnNavigatedTo(e);
@@ -32,10 +45,12 @@ namespace WindowCapture.WinApp.Dilogs.MediaFileDetail
 
         private async Task LoadDetail()
         {
+            VideoProps = await FileDetail.File.Properties.GetVideoPropertiesAsync();
+            OnPropertyChanged("VideoProps");
+
             using MemoryStream ras = new();
             var ffMpeg = new NReco.VideoConverter.FFMpegConverter();
-            ffMpeg.GetVideoThumbnail(_fileDetail.File.Path, ras, 1);
-            //var bmp = Bitmap.FromStream(ras);
+            ffMpeg.GetVideoThumbnail(FileDetail.File.Path, ras, 1);
             var bmp = new Bitmap(ras);
 
             var previewVector = bmp.GetRGBAVector();
@@ -49,6 +64,13 @@ namespace WindowCapture.WinApp.Dilogs.MediaFileDetail
             await previewSBS.SetBitmapAsync(previewSB);
 
             bmp.Dispose();
+            ras.Close();
+            ras.Dispose();
+
+            App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+            {
+                filePreview.Source = previewSBS;
+            });
         }
     }
 }

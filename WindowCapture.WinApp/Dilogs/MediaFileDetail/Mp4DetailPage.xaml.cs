@@ -8,7 +8,6 @@ using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using CaptureHelper.Extensions;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Media;
 
 namespace WindowCapture.WinApp.Dilogs.MediaFileDetail
 {

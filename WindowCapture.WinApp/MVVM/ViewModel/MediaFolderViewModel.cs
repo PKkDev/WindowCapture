@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs;
+using WindowCapture.WinApp.Dilogs.MediaFileDetail;
 using WindowCapture.WinApp.Extensios;
 using WindowCapture.WinApp.MVVM.Model;
 using Windows.Storage;
@@ -121,23 +121,15 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
             {
                 case "mp3":
                     {
-                        _detailFrame.Navigate(typeof(WindowCaptureItemPage), null, new DrillInNavigationTransitionInfo());
+                        _detailFrame.Navigate(typeof(Mp3DetailPage), fileDetail, new DrillInNavigationTransitionInfo());
                         break;
                     }
                 case "mp4":
                     {
-                        _detailFrame.Navigate(typeof(WindowCaptureItemPage), null, new DrillInNavigationTransitionInfo());
+                        _detailFrame.Navigate(typeof(Mp4DetailPage), fileDetail, new DrillInNavigationTransitionInfo());
                         break;
                     }
             }
-
-            //using MemoryStream ras = new MemoryStream();
-            //var ffMpeg = new NReco.VideoConverter.FFMpegConverter();
-            //ffMpeg.GetVideoThumbnail(fileDetail.File.Path, ras, 1);
-            //var bmp2 = Bitmap.FromStream(ras);
-            //bmp2.Save("D:\\work\\yesy2.png");
-
-            //System.Diagnostics.Process.Start("CMD.exe", $"/C {fileDetail.File.Path}");
         }
 
     }

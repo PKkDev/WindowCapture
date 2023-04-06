@@ -17,6 +17,7 @@ namespace WindowCapture.WinApp.MVVM.View
             App.MainWindow.SetTitleBar(AppTitleBar);
 
             ViewModel.NavigationHelperService.Initialize(NavView, ContentFrame);
+            NavView.SelectedItem = NavView.MenuItems[0];
             ViewModel.NavigationHelperService.Navigate("Capture");
         }
 

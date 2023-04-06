@@ -762,6 +762,7 @@ namespace WindowCapture.WinApp.MVVM.View
             if (ModalDialog.Visibility == Visibility.Collapsed)
             {
                 ModalDialog.Visibility = Visibility.Visible;
+                rootNavigationView.SelectedItem = rootNavigationView.MenuItems[1];
                 ContentFrame.Navigate(typeof(WindowCaptureItemPage), null, new DrillInNavigationTransitionInfo());
             }
             else

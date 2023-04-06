@@ -41,12 +41,6 @@
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
             </Button>
 
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center"  
-                    ToolTipService.ToolTip="open cache folder"
-                    Click="OpenCacheClick">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEC25;"/>
-            </Button>
-
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="15">

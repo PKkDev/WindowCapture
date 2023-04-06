@@ -10,8 +10,6 @@ using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Composition;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Composition;
-
-using Windows.System;
 using Windows.Devices.Enumeration;
 using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX.Direct3D11;
@@ -704,9 +702,6 @@ namespace WindowCapture.WinApp.MVVM.View
             _session?.Dispose();
             _session = null;
         }
-
-        private async void OpenCacheClick(object sender, RoutedEventArgs e)
-            => await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalCacheFolder);
 
         #region inner nav
 

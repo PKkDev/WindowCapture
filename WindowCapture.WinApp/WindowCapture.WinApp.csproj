@@ -18,19 +18,13 @@
 
   </PropertyGroup>
   <ItemGroup>
-    <Content Remove="Assets\AppIcon\BadgeLogo.scale-100.png" />
-    <Content Remove="Assets\AppIcon\BadgeLogo.scale-125.png" />
-    <Content Remove="Assets\AppIcon\BadgeLogo.scale-150.png" />
-    <Content Remove="Assets\AppIcon\BadgeLogo.scale-200.png" />
-    <Content Remove="Assets\AppIcon\BadgeLogo.scale-400.png" />
     <Content Remove="Assets\AppIcon\StoreLogo.scale-100.png" />
-    <Content Remove="Assets\AppIcon\StoreLogo.scale-125.png" />
-    <Content Remove="Assets\AppIcon\StoreLogo.scale-150.png" />
     <Content Remove="Assets\AppIcon\StoreLogo.scale-200.png" />
     <Content Remove="Assets\AppIcon\StoreLogo.scale-400.png" />
     <Content Remove="Assets\Icons\dat.png" />
     <Content Remove="Assets\Icons\mp3.png" />
     <Content Remove="Assets\Icons\mp4.png" />
+    <Content Remove="Assets\WindowCapture.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Dilogs\CaptureItemSelect\CapureItemSelectorWindow.xaml" />
@@ -84,6 +78,9 @@
     </None>
     <None Update="Assets\Icons\mp4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\WindowCapture.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Page Update="Dilogs\MediaFileDetail\Mp4DetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -8,11 +8,32 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+        <Grid x:Name="AppTitleBar"
+              Canvas.ZIndex="1"
+              Height="{Binding ElementName=NavView, Path=CompactPaneLength}"
+              IsHitTestVisible="True"
+              VerticalAlignment="Top">
+            <Image Source="/Assets/WindowCapture.ico"
+                   HorizontalAlignment="Left"
+                   Width="20"
+                   Height="20" />
+            <TextBlock x:Name="AppTitleBarText"
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       VerticalAlignment="Center"
+                       Text="Window capture"
+                       TextWrapping="NoWrap"
+                       Margin="28,0,0,0"/>
+        </Grid>
+
         <NavigationView
+            Canvas.ZIndex="0"
             x:Name="NavView"
             IsBackButtonVisible="Collapsed"
             PaneDisplayMode="LeftCompact"
-            IsSettingsVisible="true">
+            IsSettingsVisible="False"
+            IsPaneToggleButtonVisible="False"
+            AlwaysShowHeader="False"
+            DisplayModeChanged ="NavView_DisplayModeChanged">
 
             <NavigationView.MenuItems>
 

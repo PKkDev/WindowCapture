@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using WindowCapture.WinApp.Extensios;
 using Windows.Storage.FileProperties;
 
 namespace WindowCapture.WinApp.Dilogs.MediaFileDetail
@@ -31,6 +32,8 @@ namespace WindowCapture.WinApp.Dilogs.MediaFileDetail
             if (e.Parameter is MVVM.Model.MediaFileDetail fileDetail)
             {
                 FileDetail = fileDetail;
+                LoadingProgress.IsIndeterminate = true;
+                LoadingProgress.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
                 await LoadDetail();
             }
             base.OnNavigatedTo(e);
@@ -40,6 +43,11 @@ namespace WindowCapture.WinApp.Dilogs.MediaFileDetail
         {
             MusicProps = await FileDetail.File.Properties.GetMusicPropertiesAsync();
             OnPropertyChanged("MusicProps");
+
+            filePreview.Source = await FileDetail.File.GetFileIcon(HelpersWin32.FileIconHelper.IconSizeEnum.ExtraLargeIcon);
+
+            LoadingProgress.IsIndeterminate = false;
+            LoadingProgress.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
         }
     }
 }

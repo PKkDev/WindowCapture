@@ -38,6 +38,8 @@ namespace WindowCapture.WinApp.Dilogs.MediaFileDetail
             if (e.Parameter is MVVM.Model.MediaFileDetail fileDetail)
             {
                 FileDetail = fileDetail;
+                LoadingProgress.IsIndeterminate = true;
+                LoadingProgress.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
                 await LoadDetail();
             }
             base.OnNavigatedTo(e);
@@ -67,10 +69,10 @@ namespace WindowCapture.WinApp.Dilogs.MediaFileDetail
             ras.Close();
             ras.Dispose();
 
-            App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-            {
-                filePreview.Source = previewSBS;
-            });
+            filePreview.Source = previewSBS;
+
+            LoadingProgress.IsIndeterminate = false;
+            LoadingProgress.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
         }
     }
 }

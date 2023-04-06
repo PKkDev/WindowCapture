@@ -14,12 +14,12 @@
             <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
 
             <TextBlock Text="{x:Bind ViewModel.CurrentFolder.DisplayName}" VerticalAlignment="Center" />
 
             <Button HorizontalAlignment="Left" VerticalAlignment="Center" Command="{x:Bind ViewModel.OpenCurrentFolder}">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEC25;"/>
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;"/>
             </Button>
 
         </StackPanel>
@@ -39,22 +39,40 @@
                             </MenuFlyout>
                         </UserControl.ContextFlyout>
 
-                        <Grid>
+                        <Grid ColumnSpacing="5">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="47"></ColumnDefinition>
+                                <ColumnDefinition Width="35"></ColumnDefinition>
                                 <ColumnDefinition></ColumnDefinition>
                                 <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition Width="30"></ColumnDefinition>
+                                <ColumnDefinition Width="140"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
 
                             <Image Grid.Column="0" Source="{Binding Icon}" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
-                            <TextBlock Grid.Column="1" Text="{Binding DisplayName}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="{Binding DisplayName}" TextWrapping="Wrap" VerticalAlignment="Center"/>
 
                             <TextBlock Grid.Column="2" Text="{Binding DateCreated}" VerticalAlignment="Center"/>
 
                             <TextBlock Grid.Column="3" Text="{Binding FileType}" VerticalAlignment="Center"/>
+
+                            <Grid Grid.Column="4">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                
+                                <AppBarButton Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding OpenCommand}" CommandParameter="{Binding DisplayName}">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;"/>
+                                </AppBarButton>
+
+                                <AppBarButton Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding DeleteCommand}" CommandParameter="{Binding DisplayName}">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;"/>
+                                </AppBarButton>
+
+                            </Grid>
 
                         </Grid>
 

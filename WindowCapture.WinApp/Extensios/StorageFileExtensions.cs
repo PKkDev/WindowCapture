@@ -8,18 +8,19 @@ using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using Windows.Storage;
 using CaptureHelper.Extensions;
+using static WindowCapture.WinApp.HelpersWin32.FileIconHelper;
 
 namespace WindowCapture.WinApp.Extensios
 {
     public static class StorageFileExtensions
     {
-        public static async Task<ImageSource> GetFileIcon(this StorageFile file)
+        public static async Task<ImageSource> GetFileIcon(this StorageFile file, IconSizeEnum iconSize = IconSizeEnum.MediumIcon32)
         {
             var baseImgUri = "ms-appx:///Assets/Icons/dat.png";
 
             try
             {
-                var intptr = FileIconHelper.GetIconHandleFromFilePath(file.Path, FileIconHelper.IconSizeEnum.MediumIcon32);
+                var intptr = FileIconHelper.GetIconHandleFromFilePath(file.Path, iconSize);
                 var icon = FileIconHelper.GetBitmapFromIconHandle(intptr);
 
                 if (icon == null)

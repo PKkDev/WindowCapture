@@ -18,7 +18,14 @@
 
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Assets\AppIcon\BadgeLogo.scale-100.png" />
+    <Content Remove="Assets\AppIcon\BadgeLogo.scale-125.png" />
+    <Content Remove="Assets\AppIcon\BadgeLogo.scale-150.png" />
+    <Content Remove="Assets\AppIcon\BadgeLogo.scale-200.png" />
+    <Content Remove="Assets\AppIcon\BadgeLogo.scale-400.png" />
     <Content Remove="Assets\AppIcon\StoreLogo.scale-100.png" />
+    <Content Remove="Assets\AppIcon\StoreLogo.scale-125.png" />
+    <Content Remove="Assets\AppIcon\StoreLogo.scale-150.png" />
     <Content Remove="Assets\AppIcon\StoreLogo.scale-200.png" />
     <Content Remove="Assets\AppIcon\StoreLogo.scale-400.png" />
     <Content Remove="Assets\Icons\dat.png" />

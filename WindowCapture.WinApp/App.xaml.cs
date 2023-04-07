@@ -9,6 +9,7 @@ using System;
 using WindowCapture.WinApp.MVVM.View;
 using WindowCapture.WinApp.MVVM.ViewModel;
 using WindowCapture.WinApp.Service;
+using Windows.ApplicationModel.Activation;
 using Windows.Foundation.Collections;
 
 namespace WindowCapture.WinApp
@@ -40,6 +41,7 @@ namespace WindowCapture.WinApp
         public App()
         {
             InitializeComponent();
+            LaunchTask();
 
             AppDomain.CurrentDomain.ProcessExit += (object sender, EventArgs e) =>
             {
@@ -119,6 +121,18 @@ namespace WindowCapture.WinApp
 
             OverlappedPresenter overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
             overlappedPresenter.IsResizable = false;
+        }
+
+        public SplashScreen m_sc;
+
+        private async void LaunchTask()
+        {
+            m_sc = new SplashScreen();
+            m_sc.Initialize();
+            IntPtr hBitmap = await m_sc.GetBitmap(@"Assets\AppIcon\LargeTile.scale-400.png");
+            m_sc.DisplaySplash(IntPtr.Zero, hBitmap, null);
+            // m_sc.DisplaySplash(IntPtr.Zero, IntPtr.Zero, @"Assets\XboxSplashScreen.mp4");
+            // m_sc.DisplaySplash(IntPtr.Zero, IntPtr.Zero, @"Assets\Firework_black_background_640x400.mp4");
         }
     }
 }

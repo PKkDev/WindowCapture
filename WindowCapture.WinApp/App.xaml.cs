@@ -9,7 +9,6 @@ using System;
 using WindowCapture.WinApp.MVVM.View;
 using WindowCapture.WinApp.MVVM.ViewModel;
 using WindowCapture.WinApp.Service;
-using Windows.ApplicationModel.Activation;
 using Windows.Foundation.Collections;
 
 namespace WindowCapture.WinApp
@@ -123,13 +122,13 @@ namespace WindowCapture.WinApp
             overlappedPresenter.IsResizable = false;
         }
 
-        public SplashScreen m_sc;
+        public SplashScreenHelper.SplashScreen m_sc;
 
         private async void LaunchTask()
         {
-            m_sc = new SplashScreen();
+            m_sc = new SplashScreenHelper.SplashScreen();
             m_sc.Initialize();
-            IntPtr hBitmap = await m_sc.GetBitmap(@"Assets\AppIcon\LargeTile.scale-400.png");
+            IntPtr hBitmap = await m_sc.GetBitmap(@"Assets\AppIcon\SplashScreen.scale-400.png");
             m_sc.DisplaySplash(IntPtr.Zero, hBitmap, null);
             // m_sc.DisplaySplash(IntPtr.Zero, IntPtr.Zero, @"Assets\XboxSplashScreen.mp4");
             // m_sc.DisplaySplash(IntPtr.Zero, IntPtr.Zero, @"Assets\Firework_black_background_640x400.mp4");

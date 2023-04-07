@@ -19,6 +19,11 @@ namespace WindowCapture.WinApp
             windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
             App = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd));
 
+            hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            var appSplash = ((App)Application.Current).m_sc;
+            appSplash.CenterToScreen(hWnd);
+            appSplash.HideSplash(1);
+
             //App.TitleBar.ExtendsContentIntoTitleBar = true;
             //App.TitleBar.ButtonBackgroundColor = Colors.Transparent;
             //App.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;

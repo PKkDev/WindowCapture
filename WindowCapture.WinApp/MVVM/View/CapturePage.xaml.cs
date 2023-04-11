@@ -35,6 +35,9 @@ using CaptureHelper;
 using CaptureHelper.Model;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp.Notifications;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -71,8 +74,15 @@ namespace WindowCapture.WinApp.MVVM.View
         public static uint[] FrameRates => new uint[] { 24, 30, 60 };
     }
 
-    public sealed partial class CapturePage : Page
+    public sealed partial class CapturePage : Page, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
         // PCAudioCapture API objects.
         private SizeInt32 _lastSize;
         private GraphicsCaptureItem _captureItem;
@@ -771,9 +781,78 @@ namespace WindowCapture.WinApp.MVVM.View
 
         #endregion inner nav
 
-    }
-}
+        #region checks
 
+        private void IsCapturePCAudio_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool)IsCapturePCAudio.IsChecked)
+            {
+
+            }
+            else
+            {
+                filePCAudio = null;
+                PCAudioCapture?.StopRecording();
+                PCAudioCapture?.Dispose();
+
+                SilenceWaveOut?.Stop();
+                SilenceWaveOut?.Dispose();
+                SilenceWaveOut = null;
+            }
+        }
+
+        public ObservableCollection<MicrophoneInfo> MicrophoneInfos { get; set; }
+
+        private async void IsCaptureMicro_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool)IsCaptureMicro.IsChecked)
+            {
+                MicrophoneInfos = new();
+
+                MicrophoneSelector.IsEnabled = true;
+
+                string b = MediaDevice.GetDefaultAudioCaptureId(AudioDeviceRole.Communications);
+
+                string audioCaptureSelector = MediaDevice.GetAudioCaptureSelector();
+                var audioCapture = await DeviceInformation.FindAllAsync(audioCaptureSelector);
+
+                foreach (var item in audioCapture)
+                {
+                    MicrophoneInfos.Add(new(item, item.Id.Equals(b)));
+                }
+
+                OnPropertyChanged("MicrophoneInfos");
+            }
+            else
+            {
+                MicrophoneInfos = new();
+
+                fileMicroAudio = null;
+                MicrophoneSelector.IsEnabled = false;
+            }
+        }
+
+        #endregion checks
+
+    }
+
+    public class MicrophoneInfo
+    {
+        public DeviceInformation Microphone { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public string Name { get; set; }
+
+        public MicrophoneInfo(DeviceInformation microphone, bool isActive)
+        {
+            Microphone = microphone;
+            IsActive = isActive;
+            Name = microphone.Name;
+        }
+    }
+
+}
 
 
 /*

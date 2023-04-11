@@ -9,6 +9,7 @@
 
     <Page.Resources>
         <helpers:TimeSecondsToStringConverter x:Key="TimeSecondsToStringConverter" />
+        <helpers:BooleanToEnableColorConverter x:Key="BooleanToEnableColorConverter"/>
     </Page.Resources>
 
     <Grid>
@@ -67,12 +68,20 @@
 
             <StackPanel Grid.RowSpan="3" Grid.Column="1" Orientation="Vertical">
 
-                <CheckBox x:Name="IsCapturePCAudio" IsChecked="True" Content="Capture PC audio"/>
+                <CheckBox x:Name="IsCapturePCAudio" Click="IsCapturePCAudio_Click"  IsChecked="False" Content="Capture PC audio"/>
 
-                <CheckBox x:Name="IsCaptureMicro" IsChecked="True" Content="Capture microphone"/>
+                <CheckBox x:Name="IsCaptureMicro" Click="IsCaptureMicro_Click" IsChecked="False" Content="Capture microphone"/>
 
-                <ComboBox x:Name="MicrophoneSelector" Header="microphone" PlaceholderText="none"/>
-
+                <ComboBox x:Name="MicrophoneSelector" IsEnabled="False" ItemsSource="{x:Bind MicrophoneInfos, Mode=TwoWay}" PlaceholderText="none">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Fill="{Binding IsActive, Mode=OneWay, Converter={StaticResource BooleanToEnableColorConverter}}" Height="10" Width="10" Margin="0 0 5 0"/>
+                                <TextBlock Text="{Binding Name}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
             </StackPanel>
 

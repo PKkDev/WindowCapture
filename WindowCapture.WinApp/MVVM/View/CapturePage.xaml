@@ -14,60 +14,75 @@
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="150"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15">
+        <Grid Grid.Row="0">
 
-            <Button Click="Click_SelectGraphicsCaptureV2">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
-            </Button>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+            </Grid.RowDefinitions>
 
-            <Button Click="Click_SelectGraphicsCapture">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
-            </Button>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-            <Button Click="Click_StartCapture">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C8;"/>
-            </Button>
+            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="15">
 
-            <Button Click="Click_StopCapture">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71A;"/>
-            </Button>
+                <Button Click="Click_SelectGraphicsCaptureV2">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
+                </Button>
 
-            <Button Click="Click_TakeScreenShot">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
-            </Button>
+                <Button Click="Click_SelectGraphicsCapture">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
+                </Button>
 
-        </StackPanel>
+                <Button Click="Click_StartCapture">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C8;"/>
+                </Button>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="15">
+                <Button Click="Click_StopCapture">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71A;"/>
+                </Button>
 
-            <TextBlock x:Name="PCRecordedSecondsStr" Text="0 sec"></TextBlock>
+                <Button Click="Click_TakeScreenShot">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
+                </Button>
 
-            <TextBlock x:Name="MicroRecordedSecondsStr" Text="0 sec"></TextBlock>
+            </StackPanel>
 
-            <TextBlock x:Name="VideoRecordedSecondsStr" Text="0 sec"></TextBlock>
+            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="15">
 
-        </StackPanel>
+                <TextBlock x:Name="PCRecordedSecondsStr" Text="0 sec"/>
+
+                <TextBlock x:Name="MicroRecordedSecondsStr" Text="0 sec"/>
+
+                <TextBlock x:Name="VideoRecordedSecondsStr" Text="0 sec"/>
+
+            </StackPanel>
+
+            <StackPanel Grid.RowSpan="3" Grid.Column="1" Orientation="Vertical">
+
+                <CheckBox x:Name="IsCapturePCAudio" IsChecked="True" Content="Capture PC audio"/>
+
+                <CheckBox x:Name="IsCaptureMicro" IsChecked="True" Content="Capture microphone"/>
+
+                <ComboBox x:Name="MicrophoneSelector" Header="microphone" PlaceholderText="none"/>
+
+
+            </StackPanel>
+
+        </Grid>
 
         <Grid Grid.Row="2" >
 
             <ScrollViewer x:Name="gridToPreview">
 
-                <!--<StackPanel Orientation="Vertical">
-
-                    <Viewbox Height="400" Canvas.ZIndex="5" ></Viewbox>
-
-                    <MediaPlayerElement x:Name="mpElement" AutoPlay="True" AreTransportControlsEnabled="True"></MediaPlayerElement>
-
-                </StackPanel>-->
-
             </ScrollViewer>
-
-            <!--<Image x:Name="previewImage" Stretch="Uniform" Height="900" Width="990"></Image>-->
 
         </Grid>
 

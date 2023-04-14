@@ -625,7 +625,7 @@ namespace WindowCapture.WinApp.MVVM.View
             if (MediaRecording != null)
                 await MediaRecording.FinishAsync();
             #endregion capture microphone v1
-
+            
             #region capture microphone v2
             //audioGraph.Stop();
             //audioGraph?.Dispose();
@@ -635,8 +635,8 @@ namespace WindowCapture.WinApp.MVVM.View
             #endregion capture microphone v2
 
             #region capture PC audio
-            PCAudioCapture.StopRecording();
-            SilenceWaveOut.Stop();
+            PCAudioCapture?.StopRecording();
+            SilenceWaveOut?.Stop();
             #endregion capture PC audio
 
             _isRecording = false;

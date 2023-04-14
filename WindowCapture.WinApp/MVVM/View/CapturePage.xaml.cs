@@ -670,31 +670,41 @@ namespace WindowCapture.WinApp.MVVM.View
             //fileVideo = await StorageFile.GetFileFromPathAsync("C:\\Users\\prode\\AppData\\Local\\Packages\\e3ce9e70-4227-4950-abfe-78557804a917_5q3yfc64hm9aa\\LocalCache\\20230206-1600-05_video_capture.mp4");
             //fileMicroAudio = await StorageFile.GetFileFromPathAsync("C:\\Users\\prode\\AppData\\Local\\Packages\\e3ce9e70-4227-4950-abfe-78557804a917_5q3yfc64hm9aa\\LocalCache\\20230206-1600-05_micro.mp3");
 
-            if (filePCAudio != null && fileVideo != null && fileMicroAudio != null)
+            if (filePCAudio == null && fileVideo == null && fileMicroAudio == null)
+                return;
+
+            var fileUnionName = $"{DateTime.Now:yyyyMMdd-HHmm-ss}_unioun.mp4";
+            var fileUnion = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync(fileUnionName, CreationCollisionOption.GenerateUniqueName);
+
+            MediaComposition muxedStream = new();
+
+            if (filePCAudio != null)
             {
-                var fileUnionName = $"{DateTime.Now:yyyyMMdd-HHmm-ss}_unioun.mp4";
-                var fileUnion = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync(fileUnionName, CreationCollisionOption.GenerateUniqueName);
-
-                MediaComposition muxedStream = new();
-
                 BackgroundAudioTrack pcAudioTrack = await BackgroundAudioTrack.CreateFromFileAsync(filePCAudio);
-                BackgroundAudioTrack microAudioTrack = await BackgroundAudioTrack.CreateFromFileAsync(fileMicroAudio);
-                MediaClip videoTrack = await MediaClip.CreateFromFileAsync(fileVideo);
-
                 muxedStream.BackgroundAudioTracks.Add(pcAudioTrack);
-                muxedStream.BackgroundAudioTracks.Add(microAudioTrack);
-                muxedStream.Clips.Add(videoTrack);
-
-                var r = await muxedStream.RenderToFileAsync(fileUnion, MediaTrimmingPreference.Precise);
-
-
-                new ToastContentBuilder()
-                    .AddText("rendered file is ready")
-                    .Show();
-
-                //MediaStreamSource mss = muxedStream.GenerateMediaStreamSource();
-                //mpElement.Source = MediaSource.CreateFromMediaStreamSource(mss);
             }
+
+            if (fileVideo != null)
+            {
+                MediaClip videoTrack = await MediaClip.CreateFromFileAsync(fileVideo);
+                muxedStream.Clips.Add(videoTrack);
+            }
+
+            if (fileMicroAudio != null)
+            {
+                BackgroundAudioTrack microAudioTrack = await BackgroundAudioTrack.CreateFromFileAsync(fileMicroAudio);
+                muxedStream.BackgroundAudioTracks.Add(microAudioTrack);
+            }
+
+            var r = await muxedStream.RenderToFileAsync(fileUnion, MediaTrimmingPreference.Precise);
+
+
+            new ToastContentBuilder()
+                .AddText("rendered file is ready")
+                .Show();
+
+            //MediaStreamSource mss = muxedStream.GenerateMediaStreamSource();
+            //mpElement.Source = MediaSource.CreateFromMediaStreamSource(mss);
         }
 
         public void StopCapture()

@@ -40,7 +40,7 @@ namespace WindowCapture.WinApp
         public App()
         {
             InitializeComponent();
-            LaunchTask();
+            //LaunchSplachTask();
 
             AppDomain.CurrentDomain.ProcessExit += (object sender, EventArgs e) =>
             {
@@ -124,7 +124,7 @@ namespace WindowCapture.WinApp
 
         public SplashScreenHelper.SplashScreen m_sc;
 
-        private async void LaunchTask()
+        private async void LaunchSplachTask()
         {
             m_sc = new SplashScreenHelper.SplashScreen();
             m_sc.Initialize();

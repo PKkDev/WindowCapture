@@ -42,6 +42,10 @@
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
                 </Button>
 
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="15">
+
                 <Button Click="Click_StartCapture">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C8;"/>
                 </Button>
@@ -52,11 +56,25 @@
 
                 <Button Click="Click_TakeScreenShot">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
+
+                    <!--<VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="visualStateGroup1">
+                            <VisualState x:Name="visualState1">
+                                <VisualState.Setters>
+                                    <Setter Target="myButton.(Button.Style)" Value="{StaticResource AccentButtonStyle}" />
+                                </VisualState.Setters>
+                                <VisualState.StateTriggers>
+                                    <StateTrigger IsActive="{x:Bind IsOn(checkBoxState1.IsChecked), Mode=OneWay}" />
+                                </VisualState.StateTriggers>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>-->
+
                 </Button>
 
             </StackPanel>
 
-            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="15">
+            <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Spacing="15">
 
                 <TextBlock x:Name="PCRecordedSecondsStr" Text="0 sec"/>
 

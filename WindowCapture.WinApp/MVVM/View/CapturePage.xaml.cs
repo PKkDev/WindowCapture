@@ -24,9 +24,9 @@ using Windows.Devices.PointOfService;
 using Windows.Foundation;
 // NAudio
 using NAudio.Wave;
+using NAudio.CoreAudioApi;
 // SignalR
 using Microsoft.AspNetCore.SignalR.Client;
-using NAudio.CoreAudioApi;
 using WindowCapture.WinApp.Helpers;
 using Windows.Media.Capture;
 using WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs;
@@ -373,133 +373,140 @@ namespace WindowCapture.WinApp.MVVM.View
 
         private async void Click_StartCapture(object sender, RoutedEventArgs e)
         {
-            if (!_isRecording)
+            if (!_isRecording && _captureItem != null)
             {
                 var nowDate = $"{DateTime.Now:yyyyMMdd-HHmm-ss}";
 
-                #region capture PC audio
-
-                MMDevice defaultLoopbackCaptureDevice = WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice();
-                MMDevice defaultCaptureDevice = WasapiLoopbackCapture.GetDefaultCaptureDevice();
-
-                //var l = new MMDeviceEnumerator();
-                //var lll1 = l.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.All);
-                //MMDevice? lll1Activ = lll1.FirstOrDefault(x => x.FriendlyName.Equals("Динамики (H310-1)"));
-                //MMDevice? lll1Activ1 = lll1.FirstOrDefault(x => x.FriendlyName.Equals("Громкоговорители / головные телефоны (IDT High Definition Audio CODEC)"));
-                //var lll2 = l.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.All);
-                //MMDevice? lll2Activ = lll2.FirstOrDefault(x => x.FriendlyName.Equals("Микрофон (H310-1)"));
-
-                PCAudioCapture = new WasapiLoopbackCapture(defaultLoopbackCaptureDevice);
-                filePCAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"{nowDate}_pc.mp3", CreationCollisionOption.GenerateUniqueName);
-                PCAudioWriter = new WaveFileWriter(filePCAudio.Path, PCAudioCapture.WaveFormat);
-
-                PCAudioCapture.DataAvailable += (s, a) =>
+                if ((bool)IsCapturePCAudio.IsChecked)
                 {
-                    PCAudioWriter.Write(a.Buffer, 0, a.BytesRecorded);
-                    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+                    #region capture PC audio
+
+                    MMDevice defaultLoopbackCaptureDevice = WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice();
+                    MMDevice defaultCaptureDevice = WasapiLoopbackCapture.GetDefaultCaptureDevice();
+
+                    //var l = new MMDeviceEnumerator();
+                    //var lll1 = l.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.All);
+                    //MMDevice? lll1Activ = lll1.FirstOrDefault(x => x.FriendlyName.Equals("Динамики (H310-1)"));
+                    //MMDevice? lll1Activ1 = lll1.FirstOrDefault(x => x.FriendlyName.Equals("Громкоговорители / головные телефоны (IDT High Definition Audio CODEC)"));
+                    //var lll2 = l.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.All);
+                    //MMDevice? lll2Activ = lll2.FirstOrDefault(x => x.FriendlyName.Equals("Микрофон (H310-1)"));
+
+                    PCAudioCapture = new WasapiLoopbackCapture(defaultLoopbackCaptureDevice);
+                    filePCAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"{nowDate}_pc.mp3", CreationCollisionOption.GenerateUniqueName);
+                    PCAudioWriter = new WaveFileWriter(filePCAudio.Path, PCAudioCapture.WaveFormat);
+
+                    PCAudioCapture.DataAvailable += (s, a) =>
                     {
-                        try
+                        PCAudioWriter.Write(a.Buffer, 0, a.BytesRecorded);
+                        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
                         {
-                            PCAudioRecordedSeconds = PCAudioWriter.Position / PCAudioCapture.WaveFormat.AverageBytesPerSecond;
-                            PCRecordedSecondsStr.Text = $"pc: {TimeSpan.FromSeconds(PCAudioRecordedSeconds).ConvertToStr()}";
-                        }
-                        catch (Exception e) { }
-                    });
-                };
+                            try
+                            {
+                                PCAudioRecordedSeconds = PCAudioWriter.Position / PCAudioCapture.WaveFormat.AverageBytesPerSecond;
+                                PCRecordedSecondsStr.Text = $"pc: {TimeSpan.FromSeconds(PCAudioRecordedSeconds).ConvertToStr()}";
+                            }
+                            catch (Exception e) { }
+                        });
+                    };
 
-                PCAudioCapture.RecordingStopped += (s, a) =>
+                    PCAudioCapture.RecordingStopped += (s, a) =>
+                    {
+                        PCAudioWriter?.Dispose();
+                        PCAudioWriter = null;
+                        PCAudioCapture?.Dispose();
+                        PCAudioCapture = null;
+                    };
+
+                    var silence = new SilenceProvider(new WaveFormat(44100, 2)).ToSampleProvider();
+                    SilenceWaveOut = new WaveOutEvent();
+                    SilenceWaveOut.Init(silence);
+                    SilenceWaveOut.PlaybackStopped += (s, a) =>
+                    {
+                        SilenceWaveOut?.Dispose();
+                        SilenceWaveOut = null;
+                    };
+
+                    #endregion capture PC audio
+                }
+
+                if ((bool)IsCaptureMicro.IsChecked)
                 {
-                    PCAudioWriter?.Dispose();
-                    PCAudioWriter = null;
-                    PCAudioCapture?.Dispose();
-                    PCAudioCapture = null;
-                };
+                    fileMicroAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"{nowDate}_micro.mp3", CreationCollisionOption.GenerateUniqueName);
 
-                var silence = new SilenceProvider(new WaveFormat(44100, 2)).ToSampleProvider();
-                SilenceWaveOut = new WaveOutEvent();
-                SilenceWaveOut.Init(silence);
-                SilenceWaveOut.PlaybackStopped += (s, a) =>
-                {
-                    SilenceWaveOut?.Dispose();
-                    SilenceWaveOut = null;
-                };
+                    #region capture microphone v1
 
-                #endregion capture PC audio
+                    string defaultAudioCaptureId = MediaDevice.GetDefaultAudioCaptureId(AudioDeviceRole.Communications);
+                    DeviceInformation defaultAudioCapture = await DeviceInformation.CreateFromIdAsync(defaultAudioCaptureId);
 
-                fileMicroAudio = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"{nowDate}_micro.mp3", CreationCollisionOption.GenerateUniqueName);
+                    mediaCapture = new MediaCapture();
+                    mediaCaptureSettings = new MediaCaptureInitializationSettings
+                    {
+                        AudioDeviceId = defaultAudioCapture.Id,
+                        SharingMode = MediaCaptureSharingMode.SharedReadOnly,
+                        StreamingCaptureMode = StreamingCaptureMode.Audio,
+                        MemoryPreference = MediaCaptureMemoryPreference.Cpu
+                    };
+                    await mediaCapture.InitializeAsync(mediaCaptureSettings);
 
-                #region capture microphone v1
+                    mediaCapture.RecordLimitationExceeded += (MediaCapture sender) => { };
+                    mediaCapture.Failed += (MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs) => { };
 
-                string defaultAudioCaptureId = MediaDevice.GetDefaultAudioCaptureId(AudioDeviceRole.Communications);
-                DeviceInformation defaultAudioCapture = await DeviceInformation.CreateFromIdAsync(defaultAudioCaptureId);
+                    MediaRecording = await mediaCapture.PrepareLowLagRecordToStorageFileAsync(
+                        MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High), fileMicroAudio);
 
-                mediaCapture = new MediaCapture();
-                mediaCaptureSettings = new MediaCaptureInitializationSettings
-                {
-                    AudioDeviceId = defaultAudioCapture.Id,
-                    SharingMode = MediaCaptureSharingMode.SharedReadOnly,
-                    StreamingCaptureMode = StreamingCaptureMode.Audio,
-                    MemoryPreference = MediaCaptureMemoryPreference.Cpu
-                };
-                await mediaCapture.InitializeAsync(mediaCaptureSettings);
+                    #endregion capture microphone v1
 
-                mediaCapture.RecordLimitationExceeded += (MediaCapture sender) => { };
-                mediaCapture.Failed += (MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs) => { };
+                    #region capture microphone v2
 
-                MediaRecording = await mediaCapture.PrepareLowLagRecordToStorageFileAsync(
-                    MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High), fileMicroAudio);
+                    //string a = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default);
+                    //DeviceInformation a1 = await DeviceInformation.CreateFromIdAsync(a);
 
-                #endregion capture microphone v1
+                    //string defaultAudioCaptureId = MediaDevice.GetDefaultAudioCaptureId(AudioDeviceRole.Communications);
+                    //DeviceInformation defaultAudioCapture = await DeviceInformation.CreateFromIdAsync(defaultAudioCaptureId);
 
-                #region capture microphone v2
+                    //AudioGraphSettings settings = new AudioGraphSettings(Windows.Media.Render.AudioRenderCategory.Media);
+                    //settings.PrimaryRenderDevice = a1;
+                    //CreateAudioGraphResult result = await AudioGraph.CreateAsync(settings);
+                    //if (result.Status != AudioGraphCreationStatus.Success)
+                    //{ }
+                    //audioGraph = result.Graph;
 
-                //string a = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default);
-                //DeviceInformation a1 = await DeviceInformation.CreateFromIdAsync(a);
+                    //audioGraph.QuantumProcessed += (AudioGraph a, object b) =>
+                    //{
+                    //    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+                    //    {
+                    //        try
+                    //        {
+                    //            MicroAudioRecordedSeconds = a.CompletedQuantumCount * 10;
+                    //            MicroRecordedSecondsStr.Text = $"micro: {TimeSpan.FromMilliseconds(a.CompletedQuantumCount * 10).ConvertToStr()}";
+                    //        }
+                    //        catch (Exception e) { }
+                    //    });
+                    //};
+                    //audioGraph.QuantumStarted += (AudioGraph a, object b) => { };
+                    //audioGraph.UnrecoverableErrorOccurred += (a, b) => { };
 
-                //string defaultAudioCaptureId = MediaDevice.GetDefaultAudioCaptureId(AudioDeviceRole.Communications);
-                //DeviceInformation defaultAudioCapture = await DeviceInformation.CreateFromIdAsync(defaultAudioCaptureId);
+                    //// Create a device output node
+                    //CreateAudioDeviceInputNodeResult result1 = await audioGraph.CreateDeviceInputNodeAsync(
+                    //    Windows.Media.Capture.MediaCategory.Media, audioGraph.EncodingProperties, defaultAudioCapture);
+                    //if (result1.Status != AudioDeviceNodeCreationStatus.Success)
+                    //{ }
+                    //deviceInputNode = result1.DeviceInputNode;
 
-                //AudioGraphSettings settings = new AudioGraphSettings(Windows.Media.Render.AudioRenderCategory.Media);
-                //settings.PrimaryRenderDevice = a1;
-                //CreateAudioGraphResult result = await AudioGraph.CreateAsync(settings);
-                //if (result.Status != AudioGraphCreationStatus.Success)
-                //{ }
-                //audioGraph = result.Graph;
+                    //// Operate node at the graph format, but save file at the specified format
+                    //var mediaEncodingProfile = MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High);
+                    //CreateAudioFileOutputNodeResult result2 = await audioGraph.CreateFileOutputNodeAsync(fileMicroAudio, mediaEncodingProfile);
+                    //if (result2.Status != AudioFileNodeCreationStatus.Success)
+                    //{ }
+                    //fileOutputNode = result2.FileOutputNode;
 
-                //audioGraph.QuantumProcessed += (AudioGraph a, object b) =>
-                //{
-                //    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-                //    {
-                //        try
-                //        {
-                //            MicroAudioRecordedSeconds = a.CompletedQuantumCount * 10;
-                //            MicroRecordedSecondsStr.Text = $"micro: {TimeSpan.FromMilliseconds(a.CompletedQuantumCount * 10).ConvertToStr()}";
-                //        }
-                //        catch (Exception e) { }
-                //    });
-                //};
-                //audioGraph.QuantumStarted += (AudioGraph a, object b) => { };
-                //audioGraph.UnrecoverableErrorOccurred += (a, b) => { };
+                    //deviceInputNode.AddOutgoingConnection(fileOutputNode);
 
-                //// Create a device output node
-                //CreateAudioDeviceInputNodeResult result1 = await audioGraph.CreateDeviceInputNodeAsync(
-                //    Windows.Media.Capture.MediaCategory.Media, audioGraph.EncodingProperties, defaultAudioCapture);
-                //if (result1.Status != AudioDeviceNodeCreationStatus.Success)
-                //{ }
-                //deviceInputNode = result1.DeviceInputNode;
+                    #endregion capture microphone v2
+                }
 
-                //// Operate node at the graph format, but save file at the specified format
-                //var mediaEncodingProfile = MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High);
-                //CreateAudioFileOutputNodeResult result2 = await audioGraph.CreateFileOutputNodeAsync(fileMicroAudio, mediaEncodingProfile);
-                //if (result2.Status != AudioFileNodeCreationStatus.Success)
-                //{ }
-                //fileOutputNode = result2.FileOutputNode;
+                #region MediaStreamSource
 
-                //deviceInputNode.AddOutgoingConnection(fileOutputNode);
-
-                #endregion capture microphone v2
-
-                #region
                 var width = _captureItem.Size.Width;
                 var height = _captureItem.Size.Height;
 
@@ -519,9 +526,11 @@ namespace WindowCapture.WinApp.MVVM.View
                 };
                 streamSource.Paused += (MediaStreamSource sender, object args) => { };
                 streamSource.SwitchStreamsRequested += (MediaStreamSource sender, MediaStreamSourceSwitchStreamsRequestedEventArgs args) => { };
-                #endregion
 
-                #region
+                #endregion MediaStreamSource
+
+                #region MediaEncodingProfile
+
                 MediaEncodingProfile encodingProfile = new();
                 encodingProfile.Container.Subtype = "MPEG4";
                 encodingProfile.Video.Subtype = "H264";
@@ -532,15 +541,18 @@ namespace WindowCapture.WinApp.MVVM.View
                 encodingProfile.Video.FrameRate.Denominator = 1;
                 encodingProfile.Video.PixelAspectRatio.Numerator = 1;
                 encodingProfile.Video.PixelAspectRatio.Denominator = 1;
-                #endregion
 
-                #region
-                var tempFolder = ApplicationData.Current.LocalCacheFolder;
-                fileVideo = await tempFolder.CreateFileAsync($"{nowDate}_video_capture.mp4", CreationCollisionOption.ReplaceExisting);
+                #endregion MediaEncodingProfile
+
+                #region Video stream
+
+                fileVideo = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"{nowDate}_video_capture.mp4", CreationCollisionOption.ReplaceExisting);
                 var outputStream = await fileVideo.OpenAsync(FileAccessMode.ReadWrite);
-                #endregion
+
+                #endregion Video stream
 
                 #region start capture
+
                 try
                 {
                     MediaTranscoder transcoder = new();
@@ -556,18 +568,30 @@ namespace WindowCapture.WinApp.MVVM.View
                     //op.Progress += new AsyncActionProgressHandler<double>(TranscodeProgress);
                     //op.Completed += new AsyncActionWithProgressCompletedHandler<double>(TranscodeComplete);
 
-                    #region capture microphone v1
-                    await MediaRecording.StartAsync();
-                    #endregion capture microphone v1
+                    if ((bool)IsCaptureMicro.IsChecked)
+                    {
+                        #region capture microphone v1
 
-                    #region capture microphone v2
-                    //audioGraph.Start();
-                    #endregion capture microphone v2
+                        await MediaRecording.StartAsync();
 
-                    #region capture PC audio
-                    SilenceWaveOut.Play();
-                    PCAudioCapture.StartRecording();
-                    #endregion capture PC audio
+                        #endregion capture microphone v1
+
+                        #region capture microphone v2
+
+                        //audioGraph.Start();
+
+                        #endregion capture microphone v2
+                    }
+
+                    if ((bool)IsCapturePCAudio.IsChecked)
+                    {
+                        #region capture PC audio
+
+                        SilenceWaveOut.Play();
+                        PCAudioCapture.StartRecording();
+
+                        #endregion capture PC audio
+                    }
 
                     _isRecording = true;
                 }
@@ -576,6 +600,7 @@ namespace WindowCapture.WinApp.MVVM.View
                     Console.WriteLine($"{ex}");
                     throw;
                 }
+
                 #endregion start capture
 
             }
@@ -625,7 +650,7 @@ namespace WindowCapture.WinApp.MVVM.View
             if (MediaRecording != null)
                 await MediaRecording.FinishAsync();
             #endregion capture microphone v1
-            
+
             #region capture microphone v2
             //audioGraph.Stop();
             //audioGraph?.Dispose();

@@ -61,7 +61,7 @@ namespace WindowCapture.WinApp
                 services.AddTransient<MediaFolderPage>();
                 services.AddTransient<MediaFolderViewModel>();
 
-                services.AddTransient<NavigationHelperService>();
+                services.AddSingleton<NavigationHelperService>();
 
             })
             .Build();

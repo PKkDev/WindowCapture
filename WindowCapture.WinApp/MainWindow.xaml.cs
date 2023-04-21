@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using System;
+using Windows.ApplicationModel.Resources.Core;
 
 namespace WindowCapture.WinApp
 {

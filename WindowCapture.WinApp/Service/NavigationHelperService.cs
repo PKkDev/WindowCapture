@@ -54,6 +54,11 @@ namespace WindowCapture.WinApp.Service
             }
         }
 
+        public void ClearBackStack()
+        {
+            ContentFrame.BackStack.Clear();
+        }
+
         public void Navigate(string navItemTag)
         {
             Type _page = null;

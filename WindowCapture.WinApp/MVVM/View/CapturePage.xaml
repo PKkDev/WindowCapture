@@ -86,9 +86,9 @@
 
             <StackPanel Grid.RowSpan="3" Grid.Column="1" Orientation="Vertical">
 
-                <CheckBox x:Name="IsCapturePCAudio" Click="IsCapturePCAudio_Click"  IsChecked="False" Content="Capture PC audio"/>
+                <CheckBox x:Uid="IsCapturePCAudio" x:Name="IsCapturePCAudio" Click="IsCapturePCAudio_Click"  IsChecked="False" Content="Capture PC audio"/>
 
-                <CheckBox x:Name="IsCaptureMicro" Click="IsCaptureMicro_Click" IsChecked="False" Content="Capture microphone"/>
+                <CheckBox x:Uid="IsCaptureMicro" x:Name="IsCaptureMicro" Click="IsCaptureMicro_Click" IsChecked="False" Content="Capture microphone"/>
 
                 <ComboBox x:Name="MicrophoneSelector" IsEnabled="False" ItemsSource="{x:Bind MicrophoneInfos, Mode=TwoWay}" PlaceholderText="none">
                     <ComboBox.ItemTemplate>

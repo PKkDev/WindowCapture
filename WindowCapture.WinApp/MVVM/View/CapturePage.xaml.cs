@@ -38,6 +38,7 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Windows.ApplicationModel.Resources.Core;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -149,6 +150,10 @@ namespace WindowCapture.WinApp.MVVM.View
 
         public CapturePage()
         {
+           // ResourceContext.SetGlobalQualifierValue("Language", "en-US");
+
+           // Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "en-US";
+
             InitializeComponent();
 
             Setup();

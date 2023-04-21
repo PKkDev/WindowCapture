@@ -150,10 +150,6 @@ namespace WindowCapture.WinApp.MVVM.View
 
         public CapturePage()
         {
-           // ResourceContext.SetGlobalQualifierValue("Language", "en-US");
-
-           // Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "en-US";
-
             InitializeComponent();
 
             Setup();

@@ -123,4 +123,13 @@
   <data name="IsCapturePCAudio.Content" xml:space="preserve">
     <value>Capture PC audio</value>
   </data>
+  <data name="ThemeDarkName.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="ThemeDefaultName.Content" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="ThemeLightName.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
 </root>

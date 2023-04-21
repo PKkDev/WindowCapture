@@ -80,7 +80,7 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
                     //var res = ResourceContext.GetForCurrentView();
 
                     var lang = "en-US";
-                    //var lang = "ru-RU";
+                    // var lang = "ru-RU";
 
                     ResourceContext.SetGlobalQualifierValue("Language", lang);
 

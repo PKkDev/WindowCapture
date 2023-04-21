@@ -26,7 +26,7 @@
                 <StackPanel Margin="0,8,0,0">
 
                     <RadioButton
-                        Content="Light"
+                        x:Uid="ThemeLightName"
                         Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
                         FontSize="15"
@@ -37,7 +37,7 @@
                     </RadioButton>
 
                     <RadioButton
-                        Content="Dark"
+                        x:Uid="ThemeDarkName"
                         Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
                         FontSize="15"
@@ -48,7 +48,7 @@
                     </RadioButton>
 
                     <RadioButton
-                        Content="Default"
+                        x:Uid="ThemeDefaultName"
                         Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
                         FontSize="15"

@@ -38,6 +38,7 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using WindowCapture.WinApp.Dilogs.CaptureItemSelect;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -755,21 +756,24 @@ namespace WindowCapture.WinApp.MVVM.View
 
         private async void Click_SelectGraphicsCaptureV2(object sender, RoutedEventArgs e)
         {
-            ChangeInnerDIalogSate();
-            //var newWindow = new CapureItemSelectorWindow();
+            //ChangeInnerDIalogSate();
 
-            //newWindow.Closed += (sender, e) => { };
+            ContentDialog dialog = new();
 
-            //IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(newWindow);
-            //var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-            //var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+            dialog.XamlRoot = this.XamlRoot;
+            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+            dialog.Title = "Select capture item";
+            dialog.PrimaryButtonText = "Select";
+            dialog.CloseButtonText = "Cancel";
+            dialog.DefaultButton = ContentDialogButton.Close;
+            dialog.Content = new CapureItemSelectorPage();
 
-            //appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 500, Height = 450 });
+            var result = await dialog.ShowAsync();
 
-            //OverlappedPresenter overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
-            //overlappedPresenter.IsResizable = false;
+            if (result == ContentDialogResult.Primary)
+            {
 
-            //newWindow.Activate();
+            }
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)

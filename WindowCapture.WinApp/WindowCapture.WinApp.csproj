@@ -28,7 +28,7 @@
     <Content Remove="Assets\WindowCapture.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Dilogs\CaptureItemSelect\CapureItemSelectorWindow.xaml" />
+    <None Remove="Dilogs\CaptureItemSelect\CapureItemSelectorPage.xaml" />
     <None Remove="Dilogs\CaptureItemSelect\Tabs\MonitorCaptureItemPage.xaml" />
     <None Remove="Dilogs\CaptureItemSelect\Tabs\WindowCaptureItemPage.xaml" />
     <None Remove="Dilogs\MediaFileDetail\Mp3DetailPage.xaml" />
@@ -95,7 +95,7 @@
     <Page Update="Dilogs\CaptureItemSelect\Tabs\WindowCaptureItemPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Dilogs\CaptureItemSelect\CapureItemSelectorWindow.xaml">
+    <Page Update="Dilogs\CaptureItemSelect\CapureItemSelectorPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

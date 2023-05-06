@@ -1,4 +1,3 @@
-using Microsoft.UI.Xaml;
 using System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -6,14 +5,16 @@ using WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs;
 
 namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect
 {
-    public sealed partial class CapureItemSelectorWindow : Window
+    public sealed partial class CapureItemSelectorPage : Page
     {
 
         public string Test { get; set; }
 
-        public CapureItemSelectorWindow()
+        public CapureItemSelectorPage()
         {
             InitializeComponent();
+
+            ContentFrame.Navigate(typeof(WindowCaptureItemPage), null, new DrillInNavigationTransitionInfo());
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -31,14 +32,14 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect
             ContentFrame.Navigate(_page, null, new DrillInNavigationTransitionInfo());
         }
 
-        private void SelectBtn_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+        //private void SelectBtn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Close();
+        //}
 
-        private void CancelBtn_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+        //private void CancelBtn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Close();
+        //}
     }
 }

@@ -38,7 +38,6 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Windows.ApplicationModel.Resources.Core;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -65,14 +64,17 @@ namespace WindowCapture.WinApp.MVVM.View
             new SizeUInt32() { Width = 3840, Height = 2160 },
             new SizeUInt32() { Width = 7680, Height = 4320 }
         };
+        public static SizeUInt32 SelectedResolution = new() { Width = 1280, Height = 720 }; // Width = 1920, Height = 1080
 
         //  N/1000000 Mbps
         //var temp = MediaEncodingProfile.CreateMp4(VideoEncodingQuality.HD1080p);
         //var bitrate = temp.Video.Bitrate;
-        public static uint[] Bitrates => new uint[] { 9000000, 18000000, 36000000, 72000000 };
+        public static uint[] Bitrates => new uint[] { 1125000, 2250000, 4500000, 9000000, 18000000, 36000000, 72000000 };
+        public static uint SelectedBitrate = 4500000; // 18000000
 
         // N fps
         public static uint[] FrameRates => new uint[] { 24, 30, 60 };
+        public static uint SelectedFrameRate = 24; // 30
     }
 
     public sealed partial class CapturePage : Page, INotifyPropertyChanged
@@ -535,10 +537,10 @@ namespace WindowCapture.WinApp.MVVM.View
                 MediaEncodingProfile encodingProfile = new();
                 encodingProfile.Container.Subtype = "MPEG4";
                 encodingProfile.Video.Subtype = "H264";
-                encodingProfile.Video.Width = 1920;
-                encodingProfile.Video.Height = 1080;
-                encodingProfile.Video.Bitrate = 18000000;
-                encodingProfile.Video.FrameRate.Numerator = 30;
+                encodingProfile.Video.Width = CaptureSettings.SelectedResolution.Width;// 1920;
+                encodingProfile.Video.Height = CaptureSettings.SelectedResolution.Height;// 1080;
+                encodingProfile.Video.Bitrate = CaptureSettings.SelectedBitrate; //18000000;
+                encodingProfile.Video.FrameRate.Numerator = CaptureSettings.SelectedFrameRate; // 30;
                 encodingProfile.Video.FrameRate.Denominator = 1;
                 encodingProfile.Video.PixelAspectRatio.Numerator = 1;
                 encodingProfile.Video.PixelAspectRatio.Denominator = 1;

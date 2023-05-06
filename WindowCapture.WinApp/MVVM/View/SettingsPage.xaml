@@ -4,59 +4,53 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:helpers="using:WindowCapture.WinApp.Helpers"
-    xmlns:xaml="using:Microsoft.UI.Xaml"
     mc:Ignorable="d">
-
-    <Page.Resources>
-        <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
-    </Page.Resources>
 
     <Grid Padding="15" >
 
-        <StackPanel
-            x:Name="ContentArea">
-
-            <TextBlock Text="Personalization" />
+        <StackPanel>
 
             <StackPanel Margin="0,8,0,0">
 
-                <TextBlock Text="Theme" />
+                <ComboBox 
+                    x:Uid="ThemeSelector" 
+                    ItemsSource="{x:Bind ViewModel.Themes}" 
+                    SelectedItem="{x:Bind ViewModel.SelectedTheme, Mode=TwoWay}" 
+                    Width="200">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Title}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
-                <StackPanel Margin="0,8,0,0">
+            </StackPanel>
 
-                    <RadioButton
-                        x:Uid="ThemeLightName"
-                        Command="{x:Bind ViewModel.SwitchThemeCommand}"
-                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
-                        FontSize="15"
-                        GroupName="AppTheme">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Light</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
+            <StackPanel Margin="0,8,0,0" Orientation="Vertical">
 
-                    <RadioButton
-                        x:Uid="ThemeDarkName"
-                        Command="{x:Bind ViewModel.SwitchThemeCommand}"
-                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
-                        FontSize="15"
-                        GroupName="AppTheme">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Dark</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
+                <TextBlock x:Uid="LanguageSelectorHeader" />
 
-                    <RadioButton
-                        x:Uid="ThemeDefaultName"
-                        Command="{x:Bind ViewModel.SwitchThemeCommand}"
-                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
-                        FontSize="15"
-                        GroupName="AppTheme">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Default</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
+                <StackPanel Margin="0,8,0,0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="5">
+
+                    <ComboBox 
+                        x:Uid="LanguageSelector" 
+                        ItemsSource="{x:Bind ViewModel.Languages}" 
+                        SelectedItem="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}" 
+                        Width="200">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Title}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <Button Command="{x:Bind ViewModel.RestartAppCmd}" IsEnabled="{x:Bind ViewModel.IsRestartAppCmd, Mode=OneWay}"  >
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF83E;"/>
+                    </Button>
 
                 </StackPanel>
 
@@ -67,12 +61,6 @@
             <StackPanel Margin="0,8,0,0">
 
                 <TextBlock Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}"  />
-
-                <TextBlock
-                    Text="TODO: Replace with your app description."
-                    Margin="0,8,0,0"/>
-
-                <HyperlinkButton Content="YourPrivacyUrlGoesHere/" NavigateUri="https://YourPrivacyUrlGoesHere/" Margin="0,8,0,0" />
 
             </StackPanel>
 

@@ -123,13 +123,16 @@
   <data name="IsCapturePCAudio.Content" xml:space="preserve">
     <value>Захватить звук PC</value>
   </data>
-  <data name="ThemeDarkName.Content" xml:space="preserve">
-    <value>Темная</value>
+  <data name="LanguageSelector.PlaceholderText" xml:space="preserve">
+    <value>Выбор языка</value>
   </data>
-  <data name="ThemeDefaultName.Content" xml:space="preserve">
-    <value>Системная</value>
+  <data name="LanguageSelectorHeader.Text" xml:space="preserve">
+    <value>Язык</value>
   </data>
-  <data name="ThemeLightName.Content" xml:space="preserve">
-    <value>Светлая</value>
+  <data name="ThemeSelector.Header" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="ThemeSelector.PlaceholderText" xml:space="preserve">
+    <value>Выбор темы</value>
   </data>
 </root>

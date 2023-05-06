@@ -123,13 +123,16 @@
   <data name="IsCapturePCAudio.Content" xml:space="preserve">
     <value>Capture PC audio</value>
   </data>
-  <data name="ThemeDarkName.Content" xml:space="preserve">
-    <value>Dark</value>
+  <data name="LanguageSelector.PlaceholderText" xml:space="preserve">
+    <value>Pick a language</value>
   </data>
-  <data name="ThemeDefaultName.Content" xml:space="preserve">
-    <value>Default</value>
+  <data name="LanguageSelectorHeader.Text" xml:space="preserve">
+    <value>Language</value>
   </data>
-  <data name="ThemeLightName.Content" xml:space="preserve">
-    <value>Light</value>
+  <data name="ThemeSelector.Header" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="ThemeSelector.PlaceholderText" xml:space="preserve">
+    <value>Pick a theme</value>
   </data>
 </root>

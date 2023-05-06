@@ -1,14 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using WindowCapture.WinApp.MVVM.Model;
 using WindowCapture.WinApp.Service;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources.Core;
+using Windows.Globalization;
+using Windows.UI.Popups;
 
 namespace WindowCapture.WinApp.MVVM.ViewModel
 {
@@ -19,10 +23,33 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
         private string _versionDescription;
         public string VersionDescription { get => _versionDescription; set => SetProperty(ref _versionDescription, value); }
 
-        private ElementTheme _elementTheme;
-        public ElementTheme ElementTheme { get => _elementTheme; set => SetProperty(ref _elementTheme, value); }
+        public ObservableCollection<UILanguage> Languages { get; set; }
+        private UILanguage _selectedLanguage;
+        public UILanguage SelectedLanguage
+        {
+            get { return _selectedLanguage; }
+            set
+            {
+                SetLanguageAsync(value);
+                SetProperty(ref _selectedLanguage, value);
+            }
+        }
 
-        public ICommand SwitchThemeCommand { get; }
+        public ObservableCollection<UITheme> Themes { get; set; }
+        private UITheme _selectedTheme;
+        public UITheme SelectedTheme
+        {
+            get { return _selectedTheme; }
+            set
+            {
+                SetTheme(value);
+                SetProperty(ref _selectedTheme, value);
+            }
+        }
+
+        public RelayCommand RestartAppCmd { get; set; }
+        private bool _isRestartAppCmd;
+        public bool IsRestartAppCmd { get => _isRestartAppCmd; set => SetProperty(ref _isRestartAppCmd, value); }
 
         public SettingsViewModel(NavigationHelperService navigationHelperService)
         {
@@ -30,15 +57,40 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
             _versionDescription = GetVersionDescription();
 
-            SwitchThemeCommand = new RelayCommand<ElementTheme>(
-                async (param) =>
-                {
-                    if (ElementTheme != param)
-                    {
-                        ElementTheme = param;
-                        await SetThemeAsync(param);
-                    }
-                });
+            Languages = new()
+            {
+                new UILanguage("English", "en-US"),
+                new UILanguage("Russian", "ru")
+            };
+
+            if (App.MainWindow.Content is FrameworkElement rootElement1)
+            {
+                var langCode = rootElement1.Language;
+                //var langCode2 = ApplicationLanguages.PrimaryLanguageOverride;
+                var search = Languages.FirstOrDefault(x => x.Code.Contains(langCode));
+                if (search != null)
+                    SelectedLanguage = search;
+            }
+
+            Themes = new()
+            {
+                new UITheme("Default", ElementTheme.Default),
+                new UITheme("Dark", ElementTheme.Dark),
+                new UITheme("Light", ElementTheme.Light),
+            };
+
+            if (App.MainWindow.Content is FrameworkElement rootElement2)
+            {
+                var theme = rootElement2.RequestedTheme;
+                var search = Themes.FirstOrDefault(x => x.Theme == theme);
+                if (search != null)
+                    SelectedTheme = search;
+            }
+
+            RestartAppCmd = new RelayCommand(() =>
+            {
+                Microsoft.Windows.AppLifecycle.AppInstance.Restart("Application Restart Programmatically");
+            });
         }
 
         private static string GetVersionDescription()
@@ -59,57 +111,33 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
             return $"{"AppDisplayName"} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
 
-        public async Task SetThemeAsync(ElementTheme theme)
+
+        public void SetTheme(UITheme theme)
         {
             if (App.MainWindow.Content is FrameworkElement rootElement)
             {
-                rootElement.RequestedTheme = theme;
+                if (rootElement.RequestedTheme == theme.Theme)
+                    return;
 
-                var lang = rootElement.Language;
-
-                //TitleBarHelper.UpdateTitleBar(theme);
-
-
-                if (Windows.UI.Core.CoreWindow.GetForCurrentThread() != null)
-                {
-
-                }
-
-                App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-                {
-                    //var res = ResourceContext.GetForCurrentView();
-
-                    var lang = "en-US";
-                    // var lang = "ru-RU";
-
-                    ResourceContext.SetGlobalQualifierValue("Language", lang);
-
-                    Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = lang;
-
-                    // not using ResourceContext.GetForCurrentView
-                    var resourceContext = new ResourceContext();
-                    resourceContext.QualifierValues["Language"] = lang;
-                    var resourceMap = ResourceManager.Current.MainResourceMap.GetSubtree("Resources");
-
-                    var t = resourceMap.GetValue("IsCapturePCAudio/Content", resourceContext);
-                    var tt = t.ValueAsString;
-
-                    // Change the app language
-                    Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = lang;
-
-                    // Be sure to clear the Frame stack so that cached Pages are removed, otherwise they will have the old language.
-                    //Frame.BackStack.Clear();
-                    NavigationHelperService.ClearBackStack();
-
-                    // Reload the page that you want to have the new language
-                    //Frame.Navigate(typeof(MainPage));
-                    NavigationHelperService.Navigate("Settings");
-
-                });
-
+                rootElement.RequestedTheme = theme.Theme;
             }
+        }
 
-            await Task.CompletedTask;
+        public void SetLanguageAsync(UILanguage language)
+        {
+            if (App.MainWindow.Content is FrameworkElement rootElement)
+            {
+                var langCode = rootElement.Language;
+                //var langCode2 = ApplicationLanguages.PrimaryLanguageOverride;
+
+                if (language.Code.Contains(langCode))
+                    return;
+
+                ResourceContext.SetGlobalQualifierValue("Language", language.Code);
+                ApplicationLanguages.PrimaryLanguageOverride = language.Code;
+
+                IsRestartAppCmd = true;
+            }
         }
     }
 }

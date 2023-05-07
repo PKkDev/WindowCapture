@@ -120,8 +120,17 @@
   <data name="CapureItemSelectorMonitorNav.Content" xml:space="preserve">
     <value>Монитор</value>
   </data>
+  <data name="CapureItemSelectorWindowCloseBtnTxt" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
   <data name="CapureItemSelectorWindowNav.Content" xml:space="preserve">
     <value>Приложение</value>
+  </data>
+  <data name="CapureItemSelectorWindowPrimBtnTxt" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="CapureItemSelectorWindowTitle" xml:space="preserve">
+    <value>Выбор оъекта захвата</value>
   </data>
   <data name="IsCaptureMicro.Content" xml:space="preserve">
     <value>Захватить микрофон</value>

@@ -752,15 +752,15 @@ namespace WindowCapture.WinApp.MVVM.View
 
         private async void Click_SelectGraphicsCaptureV2(object sender, RoutedEventArgs e)
         {
-            //ChangeInnerDIalogSate();
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse();
 
             ContentDialog dialog = new();
 
             dialog.XamlRoot = this.XamlRoot;
             //dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
-            dialog.Title = "Select capture item";
-            dialog.PrimaryButtonText = "Select";
-            dialog.CloseButtonText = "Cancel";
+            dialog.Title = resourceLoader.GetString("CapureItemSelectorWindowTitle");
+            dialog.PrimaryButtonText = resourceLoader.GetString("CapureItemSelectorWindowPrimBtnTxt");
+            dialog.CloseButtonText = resourceLoader.GetString("CapureItemSelectorWindowCloseBtnTxt");
             dialog.DefaultButton = ContentDialogButton.Close;
             dialog.Content = new CapureItemSelectorPage();
 
@@ -771,7 +771,7 @@ namespace WindowCapture.WinApp.MVVM.View
                 var item = App.CaptureItemSelected.Type == CaptureItemSelectedType.Monitor
                     ? CaptureCreateHelper.CreateItemForMonitor(App.CaptureItemSelected.Handler)
                     : CaptureCreateHelper.CreateItemForWindow(App.CaptureItemSelected.Handler);
-                
+
                 StartCaptureInternal(item);
             }
             else

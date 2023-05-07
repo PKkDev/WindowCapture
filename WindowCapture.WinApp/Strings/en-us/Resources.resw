@@ -120,8 +120,17 @@
   <data name="CapureItemSelectorMonitorNav.Content" xml:space="preserve">
     <value>Monitor</value>
   </data>
+  <data name="CapureItemSelectorWindowCloseBtnTxt" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="CapureItemSelectorWindowNav.Content" xml:space="preserve">
     <value>Window</value>
+  </data>
+  <data name="CapureItemSelectorWindowPrimBtnTxt" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="CapureItemSelectorWindowTitle" xml:space="preserve">
+    <value>Select capture item</value>
   </data>
   <data name="IsCaptureMicro.Content" xml:space="preserve">
     <value>Capture microphone</value>

@@ -24,10 +24,9 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <Frame x:Name="ContentFrame" Grid.Row="0" Height="250">
+                <Frame x:Name="ContentFrame" Grid.Row="0" Height="200">
 
                     <Frame.ContentTransitions>
                         <TransitionCollection>

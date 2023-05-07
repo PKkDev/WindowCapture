@@ -776,6 +776,10 @@ namespace WindowCapture.WinApp.MVVM.View
                     StartCaptureInternal(item);
                 }
             }
+            else
+            {
+                App.CaptureItemSelected = null;
+            }
         }
 
         #region checks

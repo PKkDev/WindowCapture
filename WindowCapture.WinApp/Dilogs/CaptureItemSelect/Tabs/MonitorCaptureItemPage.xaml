@@ -9,12 +9,17 @@
 
     <Grid>
 
-        <GridView x:Name="MonitorsList" ItemsSource="{x:Bind MonitorInfos}" SelectionMode="Single" IsItemClickEnabled="False" SelectionChanged="GridView_SelectionChanged">
+        <GridView 
+            x:Name="MonitorsList" 
+            ItemsSource="{x:Bind MonitorInfos}" 
+            SelectionMode="Single" 
+            IsItemClickEnabled="False" 
+            SelectionChanged="GridView_SelectionChanged">
 
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Frame Width="300" Height="180" Padding="5">
+                        <Frame Width="300" Height="200" Padding="5">
                             <Grid>
 
                                 <Grid.RowDefinitions>

@@ -9,12 +9,17 @@
 
     <Grid>
 
-        <GridView x:Name="WindowsList" ItemsSource="{x:Bind WindowInfos}" SelectionMode="Single" IsItemClickEnabled="False" SelectionChanged="GridView_SelectionChanged">
+        <GridView 
+            x:Name="WindowsList" 
+            ItemsSource="{x:Bind WindowInfos}" 
+            SelectionMode="Single" 
+            IsItemClickEnabled="False" 
+            SelectionChanged="GridView_SelectionChanged">
 
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Frame Width="180" Height="180" Padding="5">
+                        <Frame Width="150" Height="150" Padding="5">
                             <Grid>
 
                                 <Grid.RowDefinitions>
@@ -34,7 +39,7 @@
 
                                 </Grid>
 
-                                <Image Grid.Row="1" Width="180" Height="130" Stretch="Fill" Source="{Binding PreviewSource, Mode=OneWay}"/>
+                                <Image Grid.Row="1" Width="150" Height="100" Stretch="Fill" Source="{Binding PreviewSource, Mode=OneWay}"/>
                                 
                             </Grid>
                         </Frame>

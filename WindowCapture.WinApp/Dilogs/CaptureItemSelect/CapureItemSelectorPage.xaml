@@ -15,9 +15,9 @@
                         ItemInvoked="NavView_ItemInvoked">
 
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Monitor" Tag="MonitorContent" />
-                <NavigationViewItem Content="Window" Tag="WindowContent" />
-                <NavigationViewItem Content="Mouse hook" Tag="MouseHookContent" />
+                <NavigationViewItem x:Uid="CapureItemSelectorMonitorNav" Tag="MonitorContent" />
+                <NavigationViewItem x:Uid="CapureItemSelectorWindowNav" Tag="WindowContent" />
+                <!--<NavigationViewItem Content="Mouse hook" Tag="MouseHookContent" />-->
             </NavigationView.MenuItems>
 
             <Grid Padding="15">
@@ -26,7 +26,7 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <Frame x:Name="ContentFrame" Grid.Row="0" Height="200">
+                <Frame x:Name="ContentFrame" Height="200">
 
                     <Frame.ContentTransitions>
                         <TransitionCollection>

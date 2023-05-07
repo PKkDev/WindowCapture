@@ -766,20 +766,16 @@ namespace WindowCapture.WinApp.MVVM.View
 
             var result = await dialog.ShowAsync();
 
-            if (result == ContentDialogResult.Primary)
+            if (result == ContentDialogResult.Primary && App.CaptureItemSelected != null)
             {
-                if (App.CaptureItemSelected != null)
-                {
-                    var item = App.CaptureItemSelected.Type == CaptureItemSelectedType.Monitor
-                        ? CaptureCreateHelper.CreateItemForMonitor(App.CaptureItemSelected.Handler)
-                        : CaptureCreateHelper.CreateItemForWindow(App.CaptureItemSelected.Handler);
-                    StartCaptureInternal(item);
-                }
+                var item = App.CaptureItemSelected.Type == CaptureItemSelectedType.Monitor
+                    ? CaptureCreateHelper.CreateItemForMonitor(App.CaptureItemSelected.Handler)
+                    : CaptureCreateHelper.CreateItemForWindow(App.CaptureItemSelected.Handler);
+                
+                StartCaptureInternal(item);
             }
             else
-            {
                 App.CaptureItemSelected = null;
-            }
         }
 
         #region checks

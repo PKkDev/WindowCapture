@@ -37,11 +37,6 @@
 
                 </Frame>
 
-                <!--<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="5" HorizontalAlignment="Right">
-                    <Button x:Name="SelectBtn" Content="Select" Click="SelectBtn_Click"/>
-                    <Button x:Name="CancelBtn" Content="Cancel" Click="CancelBtn_Click"/>
-                </StackPanel>-->
-
             </Grid>
 
         </NavigationView>

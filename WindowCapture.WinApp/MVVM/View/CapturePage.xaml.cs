@@ -29,8 +29,6 @@ using NAudio.CoreAudioApi;
 using Microsoft.AspNetCore.SignalR.Client;
 using WindowCapture.WinApp.Helpers;
 using Windows.Media.Capture;
-using WindowCapture.WinApp.Dilogs.CaptureItemSelect.Tabs;
-using Microsoft.UI.Xaml.Media.Animation;
 using CaptureHelper;
 using CaptureHelper.Model;
 using Microsoft.UI.Xaml.Navigation;
@@ -752,8 +750,6 @@ namespace WindowCapture.WinApp.MVVM.View
             _session = null;
         }
 
-        #region inner nav
-
         private async void Click_SelectGraphicsCaptureV2(object sender, RoutedEventArgs e)
         {
             //ChangeInnerDIalogSate();
@@ -761,7 +757,7 @@ namespace WindowCapture.WinApp.MVVM.View
             ContentDialog dialog = new();
 
             dialog.XamlRoot = this.XamlRoot;
-            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+            //dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
             dialog.Title = "Select capture item";
             dialog.PrimaryButtonText = "Select";
             dialog.CloseButtonText = "Cancel";
@@ -772,56 +768,15 @@ namespace WindowCapture.WinApp.MVVM.View
 
             if (result == ContentDialogResult.Primary)
             {
-
+                if (App.CaptureItemSelected != null)
+                {
+                    var item = App.CaptureItemSelected.Type == CaptureItemSelectedType.Monitor
+                        ? CaptureCreateHelper.CreateItemForMonitor(App.CaptureItemSelected.Handler)
+                        : CaptureCreateHelper.CreateItemForWindow(App.CaptureItemSelected.Handler);
+                    StartCaptureInternal(item);
+                }
             }
         }
-
-        private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
-        {
-            var navItemTag = args.InvokedItemContainer.Tag.ToString();
-
-            Type _page = navItemTag switch
-            {
-                "MonitorContent" => typeof(MonitorCaptureItemPage),
-                "WindowContent" => typeof(WindowCaptureItemPage),
-                "MouseHookContent" => typeof(WindowCaptureItemPage),
-                _ => throw new NotImplementedException(),
-            };
-
-            ContentFrame.Navigate(_page, null, new DrillInNavigationTransitionInfo());
-        }
-
-        private void SelectBtn_Click(object sender, RoutedEventArgs e)
-        {
-            ChangeInnerDIalogSate();
-            if (App.CaptureItemSelected != null)
-            {
-                var item = App.CaptureItemSelected.Type == CaptureItemSelectedType.Monitor
-                    ? CaptureCreateHelper.CreateItemForMonitor(App.CaptureItemSelected.Handler)
-                    : CaptureCreateHelper.CreateItemForWindow(App.CaptureItemSelected.Handler);
-                StartCaptureInternal(item);
-            }
-        }
-
-        private void CancelBtn_Click(object sender, RoutedEventArgs e)
-        {
-            App.CaptureItemSelected = null;
-            ChangeInnerDIalogSate();
-        }
-
-        private void ChangeInnerDIalogSate()
-        {
-            if (ModalDialog.Visibility == Visibility.Collapsed)
-            {
-                ModalDialog.Visibility = Visibility.Visible;
-                rootNavigationView.SelectedItem = rootNavigationView.MenuItems[1];
-                ContentFrame.Navigate(typeof(WindowCaptureItemPage), null, new DrillInNavigationTransitionInfo());
-            }
-            else
-                ModalDialog.Visibility = Visibility.Collapsed;
-        }
-
-        #endregion inner nav
 
         #region checks
 

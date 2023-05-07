@@ -7,9 +7,6 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect
 {
     public sealed partial class CapureItemSelectorPage : Page
     {
-
-        public string Test { get; set; }
-
         public CapureItemSelectorPage()
         {
             InitializeComponent();
@@ -31,15 +28,5 @@ namespace WindowCapture.WinApp.Dilogs.CaptureItemSelect
 
             ContentFrame.Navigate(_page, null, new DrillInNavigationTransitionInfo());
         }
-
-        //private void SelectBtn_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Close();
-        //}
-
-        //private void CancelBtn_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Close();
-        //}
     }
 }

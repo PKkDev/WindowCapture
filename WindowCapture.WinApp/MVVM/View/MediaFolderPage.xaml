@@ -16,7 +16,9 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
 
-            <TextBlock Text="{x:Bind ViewModel.CurrentFolder.DisplayName}" VerticalAlignment="Center" />
+            <Border>
+                <TextBlock Text="{x:Bind ViewModel.CurrentFolder.DisplayName, Mode=OneWay}" IsReadOnly="True" VerticalAlignment="Center" />
+            </Border>
 
             <Button HorizontalAlignment="Left" VerticalAlignment="Center" Command="{x:Bind ViewModel.OpenCurrentFolderCmd}">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;"/>

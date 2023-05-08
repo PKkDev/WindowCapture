@@ -15,7 +15,8 @@
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="150"></RowDefinition>
+            <RowDefinition Height="120"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -24,7 +25,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="20"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -76,7 +77,7 @@
 
                 <CheckBox x:Uid="IsCaptureMicro" x:Name="IsCaptureMicro" Click="IsCaptureMicro_Click" IsChecked="False" Content="Capture microphone"/>
 
-                <ComboBox x:Name="MicrophoneSelector" IsEnabled="False" ItemsSource="{x:Bind MicrophoneInfos, Mode=TwoWay}" PlaceholderText="none">
+                <ComboBox x:Name="MicrophoneSelector" IsEnabled="False" ItemsSource="{x:Bind MicrophoneInfos, Mode=TwoWay}" PlaceholderText="none" Width="200">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -88,6 +89,65 @@
                 </ComboBox>
 
             </StackPanel>
+
+        </Grid>
+
+        <Grid Grid.Row="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <ComboBox 
+                Grid.Column="0"
+                Width="150"
+                Header="Resolutions"
+                ItemsSource="{x:Bind Resolutions}" 
+                SelectedItem="{x:Bind SelectedResolution, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding SizeTxt}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <ComboBox 
+                Grid.Column="1"
+                Width="150"
+                Header="Bitrate"
+                ItemsSource="{x:Bind Bitrates}" 
+                SelectedItem="{x:Bind SelectedBitrate, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <ComboBox 
+                Grid.Column="2"
+                Width="150"
+                Header="FrameRates"
+                ItemsSource="{x:Bind FrameRates}" 
+                SelectedItem="{x:Bind SelectedFrameRate, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
         </Grid>
 

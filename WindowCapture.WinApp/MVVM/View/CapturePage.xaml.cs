@@ -37,6 +37,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using WindowCapture.WinApp.Dilogs.CaptureItemSelect;
+using WindowCapture.WinApp.MVVM.Model;
+using System.Linq;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -52,30 +54,6 @@ namespace WindowCapture.WinApp.MVVM.View
         }
     }
 
-    public static class CaptureSettings
-    {
-        // WxH
-        public static SizeUInt32[] Resolutions => new SizeUInt32[]
-        {
-            new SizeUInt32() { Width = 640, Height = 480 },
-            new SizeUInt32() { Width = 1280, Height = 720 },
-            new SizeUInt32() { Width = 1920, Height = 1080 },
-            new SizeUInt32() { Width = 3840, Height = 2160 },
-            new SizeUInt32() { Width = 7680, Height = 4320 }
-        };
-        public static SizeUInt32 SelectedResolution = new() { Width = 1280, Height = 720 }; // Width = 1920, Height = 1080
-
-        //  N/1000000 Mbps
-        //var temp = MediaEncodingProfile.CreateMp4(VideoEncodingQuality.HD1080p);
-        //var bitrate = temp.Video.Bitrate;
-        public static uint[] Bitrates => new uint[] { 1125000, 2250000, 4500000, 9000000, 18000000, 36000000, 72000000 };
-        public static uint SelectedBitrate = 4500000; // 18000000
-
-        // N fps
-        public static uint[] FrameRates => new uint[] { 24, 30, 60 };
-        public static uint SelectedFrameRate = 24; // 30
-    }
-
     public sealed partial class CapturePage : Page, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -84,6 +62,31 @@ namespace WindowCapture.WinApp.MVVM.View
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+
+        // WxH
+        public ObservableCollection<ResolutionItem> Resolutions = new()
+        {
+            new ResolutionItem(new SizeUInt32() { Width = 640, Height = 480 }) ,
+            new ResolutionItem(new SizeUInt32() { Width = 1280, Height = 720 }) ,
+            new ResolutionItem(new SizeUInt32() { Width = 1920, Height = 1080 }) ,
+            new ResolutionItem(new SizeUInt32() { Width = 3840, Height = 2160 }),
+            new ResolutionItem(new SizeUInt32() { Width = 7680, Height = 4320 })
+        };
+        private ResolutionItem _selectedResolution;
+        public ResolutionItem SelectedResolution { get; set; }
+
+        // N/1000000 Mbps
+        //var temp = MediaEncodingProfile.CreateMp4(VideoEncodingQuality.HD1080p);
+        //var bitrate = temp.Video.Bitrate;
+        public ObservableCollection<uint> Bitrates => new() { 1125000, 2250000, 4500000, 9000000, 18000000, 36000000, 72000000 };
+        private uint _selectedBitrate;
+        public uint SelectedBitrate { get; set; } = 4500000;
+
+        // N fps
+        public ObservableCollection<uint> FrameRates => new() { 24, 30, 60 };
+        private uint _SelectedFrameRate;
+        public uint SelectedFrameRate { get; set; } = 24;
+
 
         // PCAudioCapture API objects.
         private SizeInt32 _lastSize;
@@ -239,6 +242,8 @@ namespace WindowCapture.WinApp.MVVM.View
 
         private void Setup()
         {
+            SelectedResolution = Resolutions.First(x => x.Size.Width == 1280 && x.Size.Height == 720);
+
             _canvasDevice = new CanvasDevice();
 
             _compositor = App.MainWindow.Compositor;
@@ -536,10 +541,10 @@ namespace WindowCapture.WinApp.MVVM.View
                 MediaEncodingProfile encodingProfile = new();
                 encodingProfile.Container.Subtype = "MPEG4";
                 encodingProfile.Video.Subtype = "H264";
-                encodingProfile.Video.Width = CaptureSettings.SelectedResolution.Width;// 1920;
-                encodingProfile.Video.Height = CaptureSettings.SelectedResolution.Height;// 1080;
-                encodingProfile.Video.Bitrate = CaptureSettings.SelectedBitrate; //18000000;
-                encodingProfile.Video.FrameRate.Numerator = CaptureSettings.SelectedFrameRate; // 30;
+                encodingProfile.Video.Width = SelectedResolution.Size.Width;// 1920;
+                encodingProfile.Video.Height = SelectedResolution.Size.Height;// 1080;
+                encodingProfile.Video.Bitrate = SelectedBitrate; //18000000;
+                encodingProfile.Video.FrameRate.Numerator = SelectedFrameRate; // 30;
                 encodingProfile.Video.FrameRate.Denominator = 1;
                 encodingProfile.Video.PixelAspectRatio.Numerator = 1;
                 encodingProfile.Video.PixelAspectRatio.Denominator = 1;

@@ -56,13 +56,7 @@
 
             </StackPanel>
 
-            <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />
-
-            <StackPanel Margin="0,8,0,0">
-
-                <TextBlock Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}"  />
-
-            </StackPanel>
+            <TextBlock x:Uid="SettingsAbout" Style="{ThemeResource SubtitleTextBlockStyle}" />
 
         </StackPanel>
 

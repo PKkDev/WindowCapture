@@ -18,8 +18,16 @@
 
             <TextBlock Text="{x:Bind ViewModel.CurrentFolder.DisplayName}" VerticalAlignment="Center" />
 
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Command="{x:Bind ViewModel.OpenCurrentFolder}">
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Command="{x:Bind ViewModel.OpenCurrentFolderCmd}">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;"/>
+            </Button>
+
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Command="{x:Bind ViewModel.RefreshFolderCmd}">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8F7;"/>
+            </Button>
+
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Command="{x:Bind ViewModel.SelectFolderCmd}">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF89A;"/>
             </Button>
 
         </StackPanel>
@@ -63,7 +71,7 @@
                                     <ColumnDefinition></ColumnDefinition>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <AppBarButton Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding OpenCommand}" CommandParameter="{Binding DisplayName}">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;"/>
                                 </AppBarButton>

@@ -153,6 +153,9 @@
   <data name="ResolutionSelector.Header" xml:space="preserve">
     <value>Resolution</value>
   </data>
+  <data name="SettingsAbout.Text" xml:space="preserve">
+    <value>Description</value>
+  </data>
   <data name="ThemeSelector.Header" xml:space="preserve">
     <value>Theme</value>
   </data>

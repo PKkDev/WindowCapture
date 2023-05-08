@@ -12,6 +12,8 @@ using WindowCapture.WinApp.Dilogs.MediaFileDetail;
 using WindowCapture.WinApp.Extensios;
 using WindowCapture.WinApp.MVVM.Model;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
+using Windows.Storage.Pickers;
 using Windows.Storage.Search;
 using Windows.System;
 
@@ -33,7 +35,9 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
             set => SetProperty(ref _isFolderScaning, value);
         }
 
-        public RelayCommand OpenCurrentFolder { get; set; }
+        public RelayCommand OpenCurrentFolderCmd { get; set; }
+        public RelayCommand RefreshFolderCmd { get; set; }
+        public RelayCommand SelectFolderCmd { get; set; }
 
         private readonly List<string> _acceptedExtenson = new() { ".mp4", ".mp3" };
 
@@ -52,7 +56,6 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
         public MediaFolderViewModel()
         {
-
             DeleteCommand = new StandardUICommand(StandardUICommandKind.Delete);
             DeleteCommand.ExecuteRequested += async (XamlUICommand sender, ExecuteRequestedEventArgs args) =>
             {
@@ -79,11 +82,43 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
             ViewFiles = new();
             CurrentFolder = ApplicationData.Current.LocalCacheFolder;
-            OpenCurrentFolder = new RelayCommand(async () =>
+
+            SelectFolderCmd = new RelayCommand(async () =>
+            {
+                FolderPicker openPicker = new Windows.Storage.Pickers.FolderPicker();
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+                WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hwnd);
+
+                openPicker.SuggestedStartLocation = PickerLocationId.Desktop;
+                openPicker.FileTypeFilter.Add("*");
+
+                StorageFolder folder = await openPicker.PickSingleFolderAsync();
+
+                if (folder != null)
+                {
+                    StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", folder);
+                    CurrentFolder = folder;
+                    await LoadFilesInFolder();
+                }
+                else
+                {
+                    CurrentFolder = ApplicationData.Current.LocalCacheFolder;
+                    await LoadFilesInFolder();
+                }
+            });
+
+            OpenCurrentFolderCmd = new RelayCommand(async () =>
             {
                 if (CurrentFolder != null)
                     await Launcher.LaunchFolderAsync(CurrentFolder);
             });
+
+            RefreshFolderCmd = new RelayCommand(async () =>
+            {
+                if (CurrentFolder != null)
+                    await LoadFilesInFolder();
+            });
+
             Task t = Task.Run(async () => { await LoadFilesInFolder(); });
             t.Wait();
         }

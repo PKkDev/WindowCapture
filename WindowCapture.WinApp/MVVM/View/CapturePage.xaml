@@ -107,7 +107,8 @@
             <ComboBox 
                 Grid.Column="0"
                 Width="150"
-                Header="Resolutions"
+                x:Uid="ResolutionSelector"
+                Header="Resolution"
                 ItemsSource="{x:Bind Resolutions}" 
                 SelectedItem="{x:Bind SelectedResolution, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
@@ -122,6 +123,7 @@
             <ComboBox 
                 Grid.Column="1"
                 Width="150"
+                x:Uid="BitRateSelector"
                 Header="Bitrate"
                 ItemsSource="{x:Bind Bitrates}" 
                 SelectedItem="{x:Bind SelectedBitrate, Mode=TwoWay}">
@@ -137,6 +139,7 @@
             <ComboBox 
                 Grid.Column="2"
                 Width="150"
+                x:Uid="FrameRateSelector"
                 Header="FrameRates"
                 ItemsSource="{x:Bind FrameRates}" 
                 SelectedItem="{x:Bind SelectedFrameRate, Mode=TwoWay}">

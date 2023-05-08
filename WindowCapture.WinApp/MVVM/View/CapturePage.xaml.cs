@@ -63,6 +63,18 @@ namespace WindowCapture.WinApp.MVVM.View
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
+        private bool _isRendring;
+        public bool IsRendring
+        {
+            get { return _isRendring; }
+            set
+            {
+                _isRendring = value;
+                OnPropertyChanged("IsRendring");
+            }
+        }
+
+
         // WxH
         public ObservableCollection<ResolutionItem> Resolutions = new()
         {
@@ -700,6 +712,9 @@ namespace WindowCapture.WinApp.MVVM.View
 
         private async Task SaveToUnionFile()
         {
+            IsRendring = true;
+            //OnPropertyChanged("IsRendring");
+
             //filePCAudio = await StorageFile.GetFileFromPathAsync("C:\\Users\\prode\\AppData\\Local\\Packages\\e3ce9e70-4227-4950-abfe-78557804a917_5q3yfc64hm9aa\\LocalCache\\20230206-1600-05_pc.mp3");
             //fileVideo = await StorageFile.GetFileFromPathAsync("C:\\Users\\prode\\AppData\\Local\\Packages\\e3ce9e70-4227-4950-abfe-78557804a917_5q3yfc64hm9aa\\LocalCache\\20230206-1600-05_video_capture.mp4");
             //fileMicroAudio = await StorageFile.GetFileFromPathAsync("C:\\Users\\prode\\AppData\\Local\\Packages\\e3ce9e70-4227-4950-abfe-78557804a917_5q3yfc64hm9aa\\LocalCache\\20230206-1600-05_micro.mp3");
@@ -730,8 +745,9 @@ namespace WindowCapture.WinApp.MVVM.View
                 muxedStream.BackgroundAudioTracks.Add(microAudioTrack);
             }
 
-            var r = await muxedStream.RenderToFileAsync(fileUnion, MediaTrimmingPreference.Precise);
+            var result = await muxedStream.RenderToFileAsync(fileUnion, MediaTrimmingPreference.Precise);
 
+            IsRendring = false;
 
             new ToastContentBuilder()
                 .AddText("rendered file is ready")

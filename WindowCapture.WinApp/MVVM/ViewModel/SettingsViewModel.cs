@@ -1,27 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using WindowCapture.WinApp.MVVM.Model;
 using WindowCapture.WinApp.Service;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
-using Windows.UI.Popups;
 
 namespace WindowCapture.WinApp.MVVM.ViewModel
 {
     public class SettingsViewModel : ObservableRecipient
     {
         public NavigationHelperService NavigationHelperService { get; private set; }
-
-        private string _versionDescription;
-        public string VersionDescription { get => _versionDescription; set => SetProperty(ref _versionDescription, value); }
 
         public ObservableCollection<UILanguage> Languages { get; set; }
         private UILanguage _selectedLanguage;
@@ -54,8 +45,6 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
         public SettingsViewModel(NavigationHelperService navigationHelperService)
         {
             NavigationHelperService = navigationHelperService;
-
-            _versionDescription = GetVersionDescription();
 
             Languages = new()
             {
@@ -92,25 +81,6 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
                 Microsoft.Windows.AppLifecycle.AppInstance.Restart("Application Restart Programmatically");
             });
         }
-
-        private static string GetVersionDescription()
-        {
-            Version version;
-
-            if (false)
-            {
-                var packageVersion = Package.Current.Id.Version;
-
-                version = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
-            }
-            else
-            {
-                version = Assembly.GetExecutingAssembly().GetName().Version!;
-            }
-
-            return $"{"AppDisplayName"} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
-        }
-
 
         public void SetTheme(UITheme theme)
         {

@@ -10,6 +10,7 @@
     <Page.Resources>
         <helpers:TimeSecondsToStringConverter x:Key="TimeSecondsToStringConverter" />
         <helpers:BooleanToEnableColorConverter x:Key="BooleanToEnableColorConverter"/>
+        <helpers:BooleanToVisibleConverter x:Key="BooleanToVisibleConverter" />
     </Page.Resources>
 
     <Grid>
@@ -155,6 +156,9 @@
         </Grid>
 
         <Grid Grid.Row="2" >
+
+            <ProgressRing Canvas.ZIndex="15" IsIndeterminate="True" Width="80" Height="80" Foreground="Green"
+                          Visibility="{x:Bind IsRendring, Mode=OneWay, Converter={StaticResource BooleanToVisibleConverter}}"/>
 
             <ScrollViewer x:Name="gridToPreview">
             </ScrollViewer>

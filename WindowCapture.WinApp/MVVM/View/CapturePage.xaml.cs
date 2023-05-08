@@ -80,12 +80,12 @@ namespace WindowCapture.WinApp.MVVM.View
         //var bitrate = temp.Video.Bitrate;
         public ObservableCollection<uint> Bitrates => new() { 1125000, 2250000, 4500000, 9000000, 18000000, 36000000, 72000000 };
         private uint _selectedBitrate;
-        public uint SelectedBitrate { get; set; } = 4500000;
+        public uint SelectedBitrate { get; set; }
 
         // N fps
         public ObservableCollection<uint> FrameRates => new() { 24, 30, 60 };
         private uint _SelectedFrameRate;
-        public uint SelectedFrameRate { get; set; } = 24;
+        public uint SelectedFrameRate { get; set; }
 
 
         // PCAudioCapture API objects.
@@ -243,6 +243,8 @@ namespace WindowCapture.WinApp.MVVM.View
         private void Setup()
         {
             SelectedResolution = Resolutions.First(x => x.Size.Width == 1280 && x.Size.Height == 720);
+            SelectedBitrate = 4500000;
+            SelectedFrameRate = 24;
 
             _canvasDevice = new CanvasDevice();
 

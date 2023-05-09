@@ -39,6 +39,7 @@ using System.Runtime.CompilerServices;
 using WindowCapture.WinApp.Dilogs.CaptureItemSelect;
 using WindowCapture.WinApp.MVVM.Model;
 using System.Linq;
+using WindowCapture.WinApp.MVVM.ViewModel;
 
 namespace WindowCapture.WinApp.MVVM.View
 {
@@ -56,6 +57,8 @@ namespace WindowCapture.WinApp.MVVM.View
 
     public sealed partial class CapturePage : Page, INotifyPropertyChanged
     {
+        public CaptureViewModel ViewModel { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
@@ -167,6 +170,9 @@ namespace WindowCapture.WinApp.MVVM.View
         public CapturePage()
         {
             InitializeComponent();
+
+            //DataContext = 
+            ViewModel = App.GetService<CaptureViewModel>();
 
             Setup();
             //SetupSignlR();

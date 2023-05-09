@@ -52,17 +52,19 @@ namespace WindowCapture.WinApp
             ConfigureServices((context, services) =>
             {
                 // Views and ViewModels
-                services.AddTransient<SettingsViewModel>();
                 services.AddTransient<SettingsPage>();
-                services.AddTransient<ShellViewModel>();
+                services.AddTransient<SettingsViewModel>();
+
                 services.AddTransient<ShellPage>();
+                services.AddTransient<ShellViewModel>();
+
                 services.AddTransient<CapturePage>();
+                services.AddTransient<CaptureViewModel>();
 
                 services.AddTransient<MediaFolderPage>();
                 services.AddTransient<MediaFolderViewModel>();
 
                 services.AddSingleton<NavigationHelperService>();
-
             })
             .Build();
 

@@ -14,15 +14,12 @@ namespace WindowCapture.WinApp.MVVM.View
 {
     public sealed partial class CapturePage : Page
     {
-        public CaptureViewModel ViewModel { get; set; }
+        private readonly CaptureViewModel ViewModel;
 
         // Non-API related members.
         private CompositionGraphicsDevice _compositionGraphicsDevice;
         private Compositor _compositor;
         private CompositionDrawingSurface _surface;
-
-        // SignalR
-        // HubConnection connection;
 
         public CapturePage()
         {
@@ -131,8 +128,6 @@ namespace WindowCapture.WinApp.MVVM.View
 
         private void Setup()
         {
-            //_canvasDevice = new CanvasDevice();
-
             _compositor = App.MainWindow.Compositor;
 
             _compositionGraphicsDevice = CanvasComposition
@@ -146,11 +141,11 @@ namespace WindowCapture.WinApp.MVVM.View
             var visual = _compositor.CreateSpriteVisual();
             visual.RelativeSizeAdjustment = Vector2.One;
             var brush = _compositor.CreateSurfaceBrush(_surface);
-            //var brush = _compositor.CreateSurfaceBrush();
             brush.HorizontalAlignmentRatio = 0.5f;
             brush.VerticalAlignmentRatio = 0.5f;
             brush.Stretch = CompositionStretch.Uniform;
             visual.Brush = brush;
+
             ElementCompositionPreview.SetElementChildVisual(gridToPreview, visual);
         }
 

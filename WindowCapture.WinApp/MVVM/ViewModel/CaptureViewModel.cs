@@ -27,6 +27,7 @@ using Windows.Graphics.DirectX.Direct3D11;
 // NAudio
 using NAudio.Wave;
 using NAudio.CoreAudioApi;
+using WindowCapture.WinApp.Helpers;
 
 namespace WindowCapture.WinApp.MVVM.ViewModel
 {
@@ -102,6 +103,13 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
             set => SetProperty(ref _isCapturePCAudio, value);
         }
 
+        private string _recordedTime;
+        public string RecordedTime
+        {
+            get => _recordedTime;
+            set => SetProperty(ref _recordedTime, value);
+        }
+
         // PCAudioCapture API objects.
         private SizeInt32 _lastSize;
         private GraphicsCaptureItem _captureItem;
@@ -112,8 +120,7 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
         public CanvasDevice _canvasDevice;
         private IDirect3DSurface _currentFrame;
 
-        public RelayCommand SelectGraphicsCaptureCmdV1 { get; set; }
-        public RelayCommand SelectGraphicsCaptureCmdV2 { get; set; }
+        public RelayCommand SelectGraphicsCaptureCmd { get; set; }
 
         public RelayCommand StartCaptureCmd { get; set; }
         public RelayCommand StopCaptureCmd { get; set; }
@@ -123,15 +130,9 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
         private WasapiLoopbackCapture PCAudioCapture = null;
         private WaveFileWriter PCAudioWriter = null;
         private WaveOutEvent SilenceWaveOut = null;
-        private double _pCAudioRecordedSeconds;
-        public double PCAudioRecordedSeconds
-        {
-            get => _pCAudioRecordedSeconds;
-            set { _pCAudioRecordedSeconds = value; }
-        }
         #endregion capture PC audio
 
-        public TimeSpan StartRecoedVide;
+        private TimeSpan StartRecoedVide;
 
         #region capture microphone v1
         private MediaCapture mediaCapture;
@@ -139,9 +140,14 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
         private LowLagMediaRecording MediaRecording;
         #endregion capture microphone v1
 
+        #region Files to render
         StorageFile filePCAudio;
         StorageFile fileMicroAudio;
         StorageFile fileVideo;
+        #endregion Files to render
+
+        // SignalR
+        // HubConnection connection;
 
         private Queue<SurfaceWithInfo> framesToSave = new();
 
@@ -163,23 +169,15 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
             SelectedResolution = Resolutions.First(x => x.Size.Width == 1280 && x.Size.Height == 720);
             SelectedBitrate = 4500000;
-            SelectedFrameRate = 24;
+            SelectedFrameRate = 30;
 
             _canvasDevice = new CanvasDevice();
+            RecordedTime = "0 sec";
 
-            SelectGraphicsCaptureCmdV1 = new RelayCommand(async () =>
+            SelectGraphicsCaptureCmd = new RelayCommand(async () =>
             {
-                GraphicsCapturePicker picker = new();
-                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
-                WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
-                GraphicsCaptureItem captureItem = await picker.PickSingleItemAsync();
+                #region Custom dialog
 
-                if (captureItem != null)
-                    StartCaptureInternal(captureItem);
-            });
-
-            SelectGraphicsCaptureCmdV2 = new RelayCommand(async () =>
-            {
                 var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse();
 
                 ContentDialog dialog = new()
@@ -205,6 +203,21 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
                 }
                 else
                     App.CaptureItemSelected = null;
+
+                #endregion Custom dialog
+
+                #region System dialog
+
+                //GraphicsCapturePicker picker = new();
+                //var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+                //WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+                //GraphicsCaptureItem captureItem = await picker.PickSingleItemAsync();
+
+                //if (captureItem != null)
+                //    StartCaptureInternal(captureItem);
+
+                #endregion System dialog
+
             });
 
             StartCaptureCmd = new RelayCommand(async () =>
@@ -238,7 +251,7 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
                             {
                                 try
                                 {
-                                    PCAudioRecordedSeconds = PCAudioWriter.Position / PCAudioCapture.WaveFormat.AverageBytesPerSecond;
+                                    //PCAudioRecordedSeconds = PCAudioWriter.Position / PCAudioCapture.WaveFormat.AverageBytesPerSecond;
                                     //PCRecordedSecondsStr.Text = $"pc: {TimeSpan.FromSeconds(PCAudioRecordedSeconds).ConvertToStr()}";
                                 }
                                 catch (Exception e) { }
@@ -373,7 +386,7 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
                     encodingProfile.Video.Width = SelectedResolution.Size.Width;// 1920;
                     encodingProfile.Video.Height = SelectedResolution.Size.Height;// 1080;
                     encodingProfile.Video.Bitrate = SelectedBitrate; //18000000;
-                    encodingProfile.Video.FrameRate.Numerator = SelectedFrameRate; // 30;
+                    encodingProfile.Video.FrameRate.Numerator = SelectedFrameRate;
                     encodingProfile.Video.FrameRate.Denominator = 1;
                     encodingProfile.Video.PixelAspectRatio.Numerator = 1;
                     encodingProfile.Video.PixelAspectRatio.Denominator = 1;
@@ -614,7 +627,7 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
                     {
                         var time = videoFrame.SystemRelativeTime - StartRecoedVide;
                         //VideoRecordedSeconds = time.TotalSeconds;
-                        //VideoRecordedSecondsStr.Text = $"video: {time.ConvertToStr()}";
+                        RecordedTime = $"recorded: {time.ConvertToStr()}";
                     }
                     catch (Exception ex) { }
                 });

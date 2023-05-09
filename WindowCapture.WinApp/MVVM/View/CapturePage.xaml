@@ -11,6 +11,7 @@
         <helpers:TimeSecondsToStringConverter x:Key="TimeSecondsToStringConverter" />
         <helpers:BooleanToEnableColorConverter x:Key="BooleanToEnableColorConverter"/>
         <helpers:BooleanToVisibleConverter x:Key="BooleanToVisibleConverter" />
+        <helpers:BooleanReverseConverter x:Key="BooleanReverseConverter"/>
     </Page.Resources>
 
     <Grid>
@@ -36,11 +37,8 @@
 
             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="15">
 
-                <Button Command="{x:Bind ViewModel.SelectGraphicsCaptureCmdV2}">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
-                </Button>
-
-                <Button Command="{x:Bind ViewModel.SelectGraphicsCaptureCmdV1}">
+                <Button Command="{x:Bind ViewModel.SelectGraphicsCaptureCmd}"
+                        IsEnabled="{x:Bind ViewModel.IsRecording, Mode=OneWay, Converter={StaticResource BooleanReverseConverter}}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
                 </Button>
 
@@ -48,15 +46,18 @@
 
             <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="15">
 
-                <Button Command="{x:Bind ViewModel.StartCaptureCmd}">
+                <Button Command="{x:Bind ViewModel.StartCaptureCmd}"
+                        IsEnabled="{x:Bind ViewModel.IsRecording, Mode=OneWay, Converter={StaticResource BooleanReverseConverter}}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C8;"/>
                 </Button>
 
-                <Button Command="{x:Bind ViewModel.StopCaptureCmd}">
+                <Button Command="{x:Bind ViewModel.StopCaptureCmd}"
+                        IsEnabled="{x:Bind ViewModel.IsRecording, Mode=OneWay}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71A;"/>
                 </Button>
 
-                <Button Command="{x:Bind ViewModel.TakeScreenShotCmd}">
+                <Button Command="{x:Bind ViewModel.TakeScreenShotCmd}"
+                        IsEnabled="{x:Bind ViewModel.IsRecording, Mode=OneWay}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
                 </Button>
 
@@ -64,11 +65,7 @@
 
             <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Spacing="15">
 
-                <TextBlock x:Name="PCRecordedSecondsStr" Text="0 sec"/>
-
-                <TextBlock x:Name="MicroRecordedSecondsStr" Text="0 sec"/>
-
-                <TextBlock x:Name="VideoRecordedSecondsStr" Text="0 sec"/>
+                <TextBlock Text="{x:Bind ViewModel.RecordedTime, Mode=OneWay}"/>
 
             </StackPanel>
 

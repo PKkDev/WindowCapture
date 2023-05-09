@@ -1,6 +1,6 @@
 ﻿namespace WindowCapture.WinApp.MVVM.Model
 {
-    public class UILanguage
+    public sealed class UILanguage
     {
         public string Title { get; set; }
 

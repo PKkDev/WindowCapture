@@ -2,7 +2,7 @@
 
 namespace WindowCapture.WinApp.MVVM.Model
 {
-    public class UITheme
+    public sealed class UITheme
     {
         public string Title { get; set; }
 

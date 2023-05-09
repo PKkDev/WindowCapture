@@ -4,7 +4,7 @@ using Windows.Storage;
 
 namespace WindowCapture.WinApp.MVVM.Model
 {
-    public class MediaFileDetail
+    public sealed class MediaFileDetail
     {
         public ImageSource Icon { get; set; }
 

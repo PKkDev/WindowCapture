@@ -2,7 +2,7 @@
 
 namespace WindowCapture.WinApp.MVVM.Model
 {
-    public class ResolutionItem
+    public sealed class ResolutionItem
     {
         public SizeUInt32 Size { get; set; }
 

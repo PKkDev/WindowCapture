@@ -36,11 +36,11 @@
 
             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="15">
 
-                <Button Click="Click_SelectGraphicsCaptureV2">
+                <Button Command="{x:Bind ViewModel.SelectGraphicsCaptureCmdV2}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
                 </Button>
 
-                <Button Click="Click_SelectGraphicsCapture">
+                <Button Command="{x:Bind ViewModel.SelectGraphicsCaptureCmdV1}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF7EE;"/>
                 </Button>
 
@@ -48,15 +48,15 @@
 
             <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="15">
 
-                <Button Click="Click_StartCapture">
+                <Button Command="{x:Bind ViewModel.StartCaptureCmd}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C8;"/>
                 </Button>
 
-                <Button Click="Click_StopCapture">
+                <Button Command="{x:Bind ViewModel.StopCaptureCmd}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71A;"/>
                 </Button>
 
-                <Button Click="Click_TakeScreenShot">
+                <Button Command="{x:Bind ViewModel.TakeScreenShotCmd}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE722;"/>
                 </Button>
 
@@ -74,11 +74,15 @@
 
             <StackPanel Grid.RowSpan="3" Grid.Column="1" Orientation="Vertical">
 
-                <CheckBox x:Uid="IsCapturePCAudio" x:Name="IsCapturePCAudio" Click="IsCapturePCAudio_Click"  IsChecked="False" Content="Capture PC audio"/>
+                <CheckBox x:Uid="IsCapturePCAudio" IsChecked="{x:Bind ViewModel.IsCapturePCAudio, Mode=TwoWay}"/>
 
-                <CheckBox x:Uid="IsCaptureMicro" x:Name="IsCaptureMicro" Click="IsCaptureMicro_Click" IsChecked="False" Content="Capture microphone"/>
+                <CheckBox x:Uid="IsCaptureMicro" IsChecked="{x:Bind ViewModel.IsCaptureMicro, Mode=TwoWay}"/>
 
-                <ComboBox x:Name="MicrophoneSelector" IsEnabled="False" ItemsSource="{x:Bind MicrophoneInfos, Mode=TwoWay}" PlaceholderText="none" Width="200">
+                <ComboBox PlaceholderText="none"
+                          Width="200"
+                          ItemsSource="{x:Bind ViewModel.MicrophoneInfos}"
+                          SelectedItem="{x:Bind ViewModel.SelectedMicrophone, Mode=TwoWay}"
+                          IsEnabled="{x:Bind ViewModel.IsCaptureMicro, Mode=OneWay}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -110,8 +114,8 @@
                 Width="150"
                 x:Uid="ResolutionSelector"
                 Header="Resolution"
-                ItemsSource="{x:Bind Resolutions}" 
-                SelectedItem="{x:Bind SelectedResolution, Mode=TwoWay}">
+                ItemsSource="{x:Bind ViewModel.Resolutions}" 
+                SelectedItem="{x:Bind ViewModel.SelectedResolution, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -126,8 +130,8 @@
                 Width="150"
                 x:Uid="BitRateSelector"
                 Header="Bitrate"
-                ItemsSource="{x:Bind Bitrates}" 
-                SelectedItem="{x:Bind SelectedBitrate, Mode=TwoWay}">
+                ItemsSource="{x:Bind ViewModel.Bitrates}" 
+                SelectedItem="{x:Bind ViewModel.SelectedBitrate, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -142,8 +146,8 @@
                 Width="150"
                 x:Uid="FrameRateSelector"
                 Header="FrameRates"
-                ItemsSource="{x:Bind FrameRates}" 
-                SelectedItem="{x:Bind SelectedFrameRate, Mode=TwoWay}">
+                ItemsSource="{x:Bind ViewModel.FrameRates}" 
+                SelectedItem="{x:Bind ViewModel.SelectedFrameRate, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -158,7 +162,7 @@
         <Grid Grid.Row="2" >
 
             <ProgressRing Canvas.ZIndex="15" IsIndeterminate="True" Width="80" Height="80" Foreground="Green"
-                          Visibility="{x:Bind IsRendring, Mode=OneWay, Converter={StaticResource BooleanToVisibleConverter}}"/>
+                          Visibility="{x:Bind ViewModel.IsRendring, Mode=OneWay, Converter={StaticResource BooleanToVisibleConverter}}"/>
 
             <ScrollViewer x:Name="gridToPreview">
             </ScrollViewer>

@@ -17,7 +17,7 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
 
             <Border>
-                <TextBlock Text="{x:Bind ViewModel.CurrentFolder.DisplayName, Mode=OneWay}" IsReadOnly="True" VerticalAlignment="Center" />
+                <TextBlock Text="{x:Bind ViewModel.CurrentFolder.DisplayName, Mode=OneWay}" VerticalAlignment="Center" />
             </Border>
 
             <Button HorizontalAlignment="Left" VerticalAlignment="Center" Command="{x:Bind ViewModel.OpenCurrentFolderCmd}">

@@ -2,7 +2,6 @@
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Diagnostics;
-using Windows.Graphics.Imaging;
 
 namespace CaptureHelper.Model
 {

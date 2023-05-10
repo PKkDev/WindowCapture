@@ -14,17 +14,17 @@ namespace WindowCapture.WinApp.Extensios
 {
     public static class StorageFileExtensions
     {
+        private static readonly string _baseImgUri = "ms-appx:///Assets/Icons/dat.png";
+
         public static async Task<ImageSource> GetFileIcon(this StorageFile file, IconSizeEnum iconSize = IconSizeEnum.MediumIcon32)
         {
-            var baseImgUri = "ms-appx:///Assets/Icons/dat.png";
-
             try
             {
                 var intptr = FileIconHelper.GetIconHandleFromFilePath(file.Path, iconSize);
                 var icon = FileIconHelper.GetBitmapFromIconHandle(intptr);
 
                 if (icon == null)
-                    return new BitmapImage(new Uri(baseImgUri));
+                    return new BitmapImage(new Uri(_baseImgUri));
 
                 var previewVector = icon.GetRGBAVector();
                 IBuffer buffer = CryptographicBuffer.CreateFromByteArray(previewVector);
@@ -42,7 +42,7 @@ namespace WindowCapture.WinApp.Extensios
             }
             catch (Exception)
             {
-                return new BitmapImage(new Uri(baseImgUri));
+                return new BitmapImage(new Uri(_baseImgUri));
             }
         }
     }

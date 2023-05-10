@@ -301,7 +301,8 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
                         mediaCapture.Failed += (MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs) => { };
 
                         MediaRecording = await mediaCapture.PrepareLowLagRecordToStorageFileAsync(
-                            MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High), fileMicroAudio);
+                            MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High),
+                            fileMicroAudio);
 
                         #endregion capture microphone v1
 
@@ -647,9 +648,9 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
 
         private async Task RenderToUnionFile()
         {
-            await Task.Delay(TimeSpan.FromSeconds(5));
-
             IsRendring = true;
+
+            await Task.Delay(TimeSpan.FromSeconds(5));
 
             if (filePCAudio == null && fileVideo == null && fileMicroAudio == null)
                 return;

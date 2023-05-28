@@ -147,9 +147,6 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
         StorageFile fileVideo;
         #endregion Files to render
 
-        // SignalR
-        // HubConnection connection;
-
         private Queue<SurfaceWithInfo> framesToSave = new();
 
         public event EventHandler<CanvasBitmap> FillSurfaceWithBitmap;

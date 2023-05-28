@@ -43,87 +43,11 @@ namespace WindowCapture.WinApp.MVVM.View
             };
 
             Setup();
-            SetupSignlR();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-        }
-
-        private void SetupSignlR()
-        {
-            try
-            {
-                //connection = new HubConnectionBuilder()
-                //    .WithUrl("https://localhost:7139/video")
-                //    .Build();
-
-                //connection.Closed += async (error) =>
-                //{
-                //    await Task.Delay(TimeSpan.FromSeconds(5));
-                //    await connection.StartAsync();
-                //};
-
-                //try
-                //{
-                //    Task startSignalTask = Task.Run(async () => await connection.StartAsync());
-                //    startSignalTask.Wait();
-                //}
-                //catch (Exception e)
-                //{
-
-                //}
-
-                //Task sendSignalTask = Task.Run(async () =>
-                //{
-                //    try
-                //    {
-                //        while (true)
-                //        {
-                //            while (framesToSend.Count == 0) { }
-
-                //            var bytes = framesToSend.Dequeue();
-
-                //            SoftwareBitmap softwareBitmap = null;
-                //            softwareBitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(bytes);
-                //            if (softwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || softwareBitmap.BitmapAlphaMode != BitmapAlphaMode.Premultiplied)
-                //                softwareBitmap = SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
-
-                //            float newWidth = softwareBitmap.PixelWidth / 5;
-                //            float newHeight = softwareBitmap.PixelHeight / 5;
-                //            using var resourceCreator = CanvasDevice.GetSharedDevice();
-                //            using var canvasBitmap = CanvasBitmap.CreateFromSoftwareBitmap(resourceCreator, softwareBitmap);
-                //            using CanvasRenderTarget canvasRenderTarget = new(resourceCreator, newWidth, newHeight, canvasBitmap.Dpi);
-                //            using var drawingSession = canvasRenderTarget.CreateDrawingSession();
-                //            using ScaleEffect scaleEffect = new();
-
-                //            scaleEffect.Source = canvasBitmap;
-                //            scaleEffect.Scale = new System.Numerics.Vector2(newWidth / softwareBitmap.PixelWidth, newHeight / softwareBitmap.PixelHeight);
-                //            drawingSession.DrawImage(scaleEffect);
-                //            drawingSession.Flush();
-
-                //            var pixels = canvasRenderTarget.GetPixelBytes();
-                //            var c = pixels.Count(x => x != 0);
-
-                //            if (pixels.Any())
-                //                await connection.InvokeAsync("UploadStream", pixels);
-
-                //            //var news = SoftwareBitmap.CreateCopyFromBuffer(canvasRenderTarget.GetPixelBytes().AsBuffer(), BitmapPixelFormat.Bgra8, (int)newWidth, (int)newHeight, BitmapAlphaMode.Premultiplied);
-
-                //            softwareBitmap?.Dispose();
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-
-                //    }
-                //});
-            }
-            catch (Exception e)
-            {
-
-            }
         }
 
         private void Setup()
@@ -194,4 +118,54 @@ namespace WindowCapture.WinApp.MVVM.View
             DeviceInformation a1 = await DeviceInformation.CreateFromIdAsync(a);
             #endregion динамики
 
+ */
+
+
+/*
+ 
+                 Task sendSignalTask = Task.Run(async () =>
+                {
+                    try
+                    {
+                        while (true)
+                        {
+                            while (framesToSend.Count == 0) { }
+
+                            var bytes = framesToSend.Dequeue();
+
+                            SoftwareBitmap softwareBitmap = null;
+                            softwareBitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(bytes);
+                            if (softwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || softwareBitmap.BitmapAlphaMode != BitmapAlphaMode.Premultiplied)
+                                softwareBitmap = SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+
+                            float newWidth = softwareBitmap.PixelWidth / 5;
+                            float newHeight = softwareBitmap.PixelHeight / 5;
+                            using var resourceCreator = CanvasDevice.GetSharedDevice();
+                            using var canvasBitmap = CanvasBitmap.CreateFromSoftwareBitmap(resourceCreator, softwareBitmap);
+                            using CanvasRenderTarget canvasRenderTarget = new(resourceCreator, newWidth, newHeight, canvasBitmap.Dpi);
+                            using var drawingSession = canvasRenderTarget.CreateDrawingSession();
+                            using ScaleEffect scaleEffect = new();
+
+                            scaleEffect.Source = canvasBitmap;
+                            scaleEffect.Scale = new System.Numerics.Vector2(newWidth / softwareBitmap.PixelWidth, newHeight / softwareBitmap.PixelHeight);
+                            drawingSession.DrawImage(scaleEffect);
+                            drawingSession.Flush();
+
+                            var pixels = canvasRenderTarget.GetPixelBytes();
+                            var c = pixels.Count(x => x != 0);
+
+                            if (pixels.Any())
+                                await connection.InvokeAsync("UploadStream", pixels);
+
+                            //var news = SoftwareBitmap.CreateCopyFromBuffer(canvasRenderTarget.GetPixelBytes().AsBuffer(), BitmapPixelFormat.Bgra8, (int)newWidth, (int)newHeight, BitmapAlphaMode.Premultiplied);
+
+                            softwareBitmap?.Dispose();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                });
+ 
  */

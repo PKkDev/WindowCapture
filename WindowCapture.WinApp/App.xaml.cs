@@ -118,7 +118,7 @@ namespace WindowCapture.WinApp
             var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
             var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
 
-            appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 600, Height = 700 });
+            appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 700, Height = 700 });
 
             OverlappedPresenter overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
             overlappedPresenter.IsResizable = false;

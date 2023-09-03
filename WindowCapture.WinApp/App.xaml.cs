@@ -120,8 +120,8 @@ namespace WindowCapture.WinApp
 
             appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 700, Height = 700 });
 
-            OverlappedPresenter overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
-            overlappedPresenter.IsResizable = false;
+            //OverlappedPresenter overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
+            //overlappedPresenter.IsResizable = false;
         }
 
         public SplashScreenHelper.SplashScreen m_sc;

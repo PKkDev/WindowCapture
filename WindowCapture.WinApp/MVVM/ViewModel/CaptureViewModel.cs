@@ -29,7 +29,6 @@ using CaptureHelper.Model;
 using NAudio.Wave;
 using NAudio.CoreAudioApi;
 
-
 namespace WindowCapture.WinApp.MVVM.ViewModel
 {
     public class CaptureViewModel : ObservableRecipient
@@ -156,9 +155,9 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
             MicrophoneInfos = new();
             Resolutions = new()
             {
-                new ResolutionItem(new SizeUInt32() { Width = 640, Height = 480 }) ,
-                new ResolutionItem(new SizeUInt32() { Width = 1280, Height = 720 }) ,
-                new ResolutionItem(new SizeUInt32() { Width = 1920, Height = 1080 }) ,
+                new ResolutionItem(new SizeUInt32() { Width = 640, Height = 480 }),
+                new ResolutionItem(new SizeUInt32() { Width = 1280, Height = 720 }),
+                new ResolutionItem(new SizeUInt32() { Width = 1920, Height = 1080 }),
                 new ResolutionItem(new SizeUInt32() { Width = 3840, Height = 2160 }),
                 new ResolutionItem(new SizeUInt32() { Width = 7680, Height = 4320 })
             };
@@ -703,5 +702,9 @@ namespace WindowCapture.WinApp.MVVM.ViewModel
                 fileMicroAudio = null;
         }
 
+        public void OnNavigatedFrom()
+        {
+
+        }
     }
 }

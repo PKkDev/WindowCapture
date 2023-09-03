@@ -27,26 +27,33 @@ namespace WindowCapture.WinApp.MVVM.View
 
             DataContext = ViewModel = App.GetService<CaptureViewModel>();
 
-            ViewModel.FillSurfaceWithBitmap += (object sender, CanvasBitmap canvasBitmap) =>
-            {
-                try
-                {
-                    CanvasComposition.Resize(_surface, canvasBitmap.Size);
-                    using var session = CanvasComposition.CreateDrawingSession(_surface);
-                    session.Clear(Colors.Transparent);
-                    session.DrawImage(canvasBitmap);
-                }
-                catch (Exception ex)
-                {
-
-                }
-            };
+            ViewModel.FillSurfaceWithBitmap += OnFillSurfaceWithBitmap;
 
             Setup();
         }
 
+        private void OnFillSurfaceWithBitmap(object sender, CanvasBitmap canvasBitmap)
+        {
+            try
+            {
+                CanvasComposition.Resize(_surface, canvasBitmap.Size);
+                using var session = CanvasComposition.CreateDrawingSession(_surface);
+                session.Clear(Colors.Transparent);
+                session.DrawImage(canvasBitmap);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            _compositionGraphicsDevice?.Dispose();
+            _surface?.Dispose();
+
+            ViewModel.OnNavigatedFrom();
+
             base.OnNavigatedFrom(e);
         }
 

@@ -31,7 +31,7 @@
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
@@ -76,7 +76,7 @@
                 <CheckBox x:Uid="IsCaptureMicro" IsChecked="{x:Bind ViewModel.IsCaptureMicro, Mode=TwoWay}"/>
 
                 <ComboBox PlaceholderText="none"
-                          Width="200"
+                          HorizontalAlignment="Stretch"
                           ItemsSource="{x:Bind ViewModel.MicrophoneInfos}"
                           SelectedItem="{x:Bind ViewModel.SelectedMicrophone, Mode=TwoWay}"
                           IsEnabled="{x:Bind ViewModel.IsCaptureMicro, Mode=OneWay}">
@@ -94,7 +94,7 @@
 
         </Grid>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" ColumnSpacing="15">
 
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
@@ -108,7 +108,7 @@
 
             <ComboBox 
                 Grid.Column="0"
-                Width="150"
+                HorizontalAlignment="Stretch"
                 x:Uid="ResolutionSelector"
                 Header="Resolution"
                 ItemsSource="{x:Bind ViewModel.Resolutions}" 
@@ -124,7 +124,7 @@
 
             <ComboBox 
                 Grid.Column="1"
-                Width="150"
+                HorizontalAlignment="Stretch"
                 x:Uid="BitRateSelector"
                 Header="Bitrate"
                 ItemsSource="{x:Bind ViewModel.Bitrates}" 
@@ -139,8 +139,8 @@
             </ComboBox>
 
             <ComboBox 
-                Grid.Column="2"
-                Width="150"
+                Grid.Column="2"   
+                HorizontalAlignment="Stretch"
                 x:Uid="FrameRateSelector"
                 Header="FrameRates"
                 ItemsSource="{x:Bind ViewModel.FrameRates}" 
